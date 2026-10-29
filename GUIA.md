@@ -80,8 +80,10 @@ frecuencias distintas, bases no positivas, empates y descensos.
 La construcción del servidor está completa. Registramos `bcrp` y `fetch` en Codex y
 comprobamos su arranque como procesos independientes por stdio usando `verificar_conexion.py`.
 La comprobación recuperó herramientas, ficha, prompt y un precio del oro, y leyó una página con Fetch.
-Falta recargar las conexiones de la aplicación y comprobar una llamada directa del asistente
-desde el chat. Después evaluaremos las diez preguntas. Los pasos están en [CONEXION.md](CONEXION.md).
+Después de recargar las conexiones, `/mcp` mostró ambos servidores activados. Comprobamos
+llamadas directas desde el chat a `buscar_series`, `serie` y Fetch; también se descubrió
+la plantilla del recurso. La conexión conversacional está confirmada. Falta evaluar
+las diez preguntas. Los pasos y la comprobación están en [CONEXION.md](CONEXION.md).
 
 ## Nuestra herramienta propia: comparar dos series
 

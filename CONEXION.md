@@ -49,3 +49,17 @@ el cliente de prueba no confirma por sí solo ese último paso.
 
 Un chat alojado en ChatGPT web usa otra integración mediante plugins; no lee automáticamente
 la configuración local de Codex. Comprueba siempre en qué cliente estás usando el ejercicio.
+
+## Conexión confirmada desde el chat
+
+Después de recargar la conexión, `/mcp` mostró `bcrp` y `fetch` activados y el asistente
+pudo llamar directamente a las herramientas de ambos servidores:
+
+- `buscar_series`, con «oro precio» y frecuencia mensual, identificó `PN38793BM`.
+- `serie`, con ese código y agosto de 2026, devolvió `4411.14666632069` US$ por onza troy.
+- La lista de plantillas de recursos incluyó `bcrp://serie/{codigo}`.
+- Fetch leyó `https://gofastmcp.com/llms.txt` y devolvió documentación de FastMCP.
+
+El dato consultado corresponde al **precio mensual de exportación del oro**.
+[Fuente devuelta por la herramienta](https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN38793BM/json/2026-8/2026-8).
+Esta comprobación conversacional es distinta de ejecutar `verificar_conexion.py`, que usa un cliente de prueba.
