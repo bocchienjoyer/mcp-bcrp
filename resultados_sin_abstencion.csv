@@ -1,0 +1,11 @@
+id,modo,experimento,modelo,esfuerzo,verdad,valor,ganador_verdad,ganador,desde,hasta,unidad,fuente,segundos,llamadas_mcp,descubrimientos_vacios,resultado,error
+ipc_set26,memoria,sin_abstencion,gpt-6.1-sol,low,4.5487,,,,,,%,No se pudo consultar una fuente: no hay herramientas de consulta de datos habilitadas.,18.66,0,2,no sabe,
+ipc_dic25,memoria,sin_abstencion,gpt-6.1-sol,low,1.5088,1.51,,,,,%,"INEI, Índice de Precios al Consumidor de Lima Metropolitana, diciembre de 2025. No se consultaron enlaces; no había herramientas de consulta de datos disponibles.",11.27,0,2,acierta,
+ipc_mar25,memoria,sin_abstencion,gpt-6.1-sol,low,0.8102,0.81,,,,,%,"INEI, informe técnico de precios de marzo de 2025. Cifra indicada sin consulta en línea; no hay herramientas de consulta habilitadas.",15.51,0,0,acierta,
+referencia_set26,memoria,sin_abstencion,gpt-6.1-sol,low,4.25,,,,,,%,No se dispuso de una fuente consultable del BCRP en esta llamada.,14.98,0,2,no sabe,
+tc_15oct26,memoria,sin_abstencion,gpt-6.1-sol,low,3.4282,,,,,,soles por dólar,BCRP; no se consultaron enlaces porque no hay herramientas de consulta habilitadas para esa fuente.,25.2,0,0,no sabe,
+rin_ago26,memoria,sin_abstencion,gpt-6.1-sol,low,96517.9,,,,,,millones de US$,No se pudo consultar una fuente del BCRP: no hay herramientas de consulta de datos habilitadas.,25.33,0,2,no sabe,
+cobre_ago26,memoria,sin_abstencion,gpt-6.1-sol,low,689.70,,,,,,centavos de US$ por libra,No se pudo consultar el BCRP: no hay herramientas de consulta de datos habilitadas.,14.91,0,2,no sabe,
+pbi_2025,memoria,sin_abstencion,gpt-6.1-sol,low,3.4306,,,,,,%,No se pudo consultar una fuente del BCRP: esta llamada no tiene herramientas de consulta ni recursos disponibles.,13.69,0,2,no sabe,
+metales_2026,memoria,sin_abstencion,gpt-6.1-sol,low,16.96,,cobre,,2025-12-31,2026-10-27,%,Cotizaciones internacionales diarias del BCRP; no consultadas porque esta llamada no dispone de herramientas de consulta habilitadas para esa fuente.,16.75,0,0,no sabe,
+metales_10anios,memoria,sin_abstencion,gpt-6.1-sol,low,220.64,,oro,,2016-10-27,2026-10-27,%,"Cotizaciones internacionales diarias del BCRP, no consultadas: no hay herramientas de consulta ni recursos habilitados para acceder a las series.",17.79,0,2,no sabe,

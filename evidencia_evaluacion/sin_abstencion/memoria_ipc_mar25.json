@@ -1,0 +1,30 @@
+{
+  "id": "ipc_mar25",
+  "pregunta": "¿Cuál fue la variación mensual del IPC de Lima Metropolitana en marzo de 2025, en %?",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "modo": "memoria",
+  "experimento": "sin_abstencion",
+  "respuesta": {
+    "valor": 0.81,
+    "unidad": "%",
+    "fuente": "INEI, informe técnico de precios de marzo de 2025. Cifra indicada sin consulta en línea; no hay herramientas de consulta habilitadas.",
+    "ganador": null,
+    "desde": null,
+    "hasta": null,
+    "explicacion": "El IPC de Lima Metropolitana aumentó 0,81 % en marzo de 2025 respecto de febrero de 2025."
+  },
+  "llamadas_mcp": [],
+  "descubrimientos_sin_datos": [],
+  "uso": {
+    "input_tokens": 22035,
+    "cached_input_tokens": 10752,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 230,
+    "reasoning_output_tokens": 59
+  },
+  "segundos": 15.51,
+  "resultado": "acierta",
+  "problemas": [],
+  "sha256_eventos": "1960ff05f026061e1f807691165714c9ecbd9b8eb1deefecc186308cd87e18e9"
+}

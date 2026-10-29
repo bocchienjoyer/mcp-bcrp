@@ -1,0 +1,50 @@
+{
+  "id": "tc_15oct26",
+  "pregunta": "¿Cuál fue el tipo de cambio interbancario venta del 15 de octubre de 2026 según el BCRP, en soles por dólar?",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "modo": "mcp",
+  "experimento": "base",
+  "respuesta": {
+    "valor": 3.42821428571429,
+    "unidad": "soles por dólar",
+    "fuente": "BCRP, serie PD04638PD: Tipo de cambio - TC Interbancario (S/ por US$) - Venta. https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04638PD/json/2026-10-15/2026-10-15",
+    "ganador": null,
+    "desde": null,
+    "hasta": null,
+    "explicacion": "Valor oficial de la serie diaria correspondiente al 15 de octubre de 2026."
+  },
+  "llamadas_mcp": [
+    {
+      "server": "bcrp",
+      "tool": "buscar_series",
+      "arguments": {
+        "texto": "tipo de cambio interbancario venta",
+        "frecuencia": "Diaria"
+      },
+      "status": "completed"
+    },
+    {
+      "server": "bcrp",
+      "tool": "serie",
+      "arguments": {
+        "codigo": "PD04638PD",
+        "desde": "2026-10-15",
+        "hasta": "2026-10-15"
+      },
+      "status": "completed"
+    }
+  ],
+  "uso": {
+    "input_tokens": 47931,
+    "cached_input_tokens": 22912,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 283,
+    "reasoning_output_tokens": 0
+  },
+  "segundos": 26.13,
+  "resultado": "acierta",
+  "problemas": [],
+  "descubrimientos_sin_datos": [],
+  "sha256_eventos": "8020021765ebfa1ce07af24f49d5901eb622d54a1326abc129dd9a80732231d5"
+}

@@ -1,0 +1,9 @@
+id,codigo,periodo,valor_visible_tabla,verdad_curso,dentro_tolerancia,fuente
+ipc_set26,PN01273PM,2026-09,4.55,4.5487,True,https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN01273PM/html/2026-9/2026-9
+ipc_dic25,PN01273PM,2025-12,1.51,1.5088,True,https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN01273PM/html/2025-12/2025-12
+ipc_mar25,PN01271PM,2025-03,0.81,0.8102,True,https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN01271PM/html/2025-3/2025-3
+referencia_set26,PD04722MM,2026-09,4.25,4.25,True,https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04722MM/html/2026-9/2026-9
+tc_15oct26,PD04638PD,2026-10-15,3.428,3.4282,True,https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04638PD/html/2026-10-15/2026-10-15
+rin_ago26,PN00027MM,2026-08,96518.0,96517.9,True,https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN00027MM/html/2026-8/2026-8
+cobre_ago26,PN38784BM,2026-08,689.7,689.70,True,https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN38784BM/html/2026-8/2026-8
+pbi_2025,PM04923AA,2025,3.4,3.4306,True,https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PM04923AA/html/2025/2025

@@ -1,146 +1,90 @@
-# Proyecto · Un MCP con las series oficiales del BCRP
+# MCP del BCRP con OpenAI / Codex
 
-En 1 h 40 min construyen un servidor MCP con FastMCP que busca entre las 17,167 series del Banco Central de Reserva
-del Perú, las descarga y calcula variaciones. Después lo conectan a Claude Code y miden, con `claude -p`, cuántas cifras
-acierta Claude sin su servidor y cuántas con él.
+Servidor MCP para consultar series oficiales del Banco Central de Reserva del Perú y medir si su acceso mejora las respuestas de un modelo.
 
-| Archivo | Qué es |
+La **referencia principal** es la [presentación de clase](https://claude.ai/artifact/B9W8izJCRr6qsTLwbMXqcT).
+El [repositorio compartido](https://github.com/d2cml-ai/Data-Science-Python/tree/main/sessions/04-mcp-claude-code) aportó los archivos base.
+El enunciado se conserva en [ENUNCIADO_ORIGINAL.md](ENUNCIADO_ORIGINAL.md). Adaptamos la conexión y la evaluación de Claude Code a OpenAI mediante Codex.
+
+## Resultado de la corrida guardada
+
+| Condición | Aciertos | Discrepancias | No sabe |
+|---|---:|---:|---:|
+| Memoria, con instrucción de abstenerse | 1/10 | 0 | 9 |
+| MCP del BCRP | 9/10 | 1 | 0 |
+| Memoria, sin esa instrucción | 2/10 | 0 | 8 |
+
+Mismo modelo `gpt-6.1-sol`, esfuerzo `low`, sesiones independientes y sin acceso a las respuestas de referencia.
+La discrepancia del cobre se debe a la selección de la serie LME frente al precio de exportación esperado por el curso; ambos indicadores son del BCRP.
+Una consulta aclarada con la palabra «exportación» acertó. Ese diagnóstico no reemplazó la corrida base.
+
+- [Informe completo](informe.md).
+- [Resultados base](resultados.csv), [experimento adicional](resultados_sin_abstencion.csv) y [diagnóstico](resultados_diagnostico.csv).
+- [Evidencias de las llamadas y respuestas](evidencia_evaluacion/).
+- [Referencias verificadas en la web](referencias_verificadas.csv) y [comparaciones de los metales](verificacion_web/comparaciones.json).
+
+![Evaluación y comparaciones de metales](grafico.png)
+
+## Qué ofrece el MCP
+
+| Componente | Función |
 |---|---|
-| `server.py` | El servidor. `buscar_series` ya funciona; faltan los TODO 1 a 5 |
-| `test_server.py` | El contrato: 8 pruebas con datos reales del BCRP. No lo cambien |
-| `preguntas.csv` | 8 preguntas con la cifra oficial y la tolerancia; ustedes agregan 2 |
-| `evaluar.py` | Le hace cada pregunta a Claude sin herramientas y con su MCP, y califica |
+| `buscar_series` | Busca códigos, nombres y frecuencias en el catálogo oficial. |
+| `serie` | Consulta valores diarios, mensuales, trimestrales o anuales y devuelve la fuente. |
+| `resumen` | Calcula cambios, promedio y extremos con sus periodos. |
+| `comparar_series` | Compara cambios porcentuales usando fechas comunes entre dos series. |
+| `bcrp://serie/{codigo}` | Recurso con la ficha de una serie. |
+| `informe(tema)` | Prompt reutilizable para preparar un informe con fuentes. |
 
-Necesitan `uv`, Claude Code con su sesión iniciada e internet. Node solo hace falta para MCP Inspector, que es opcional.
+## Instalar y conectar
 
-## Parte 0 · Preparar (10 min)
+Requisitos: Python 3.11 o superior, uv, Codex CLI con una sesión iniciada e internet.
 
-```bash
-git clone https://github.com/d2cml-ai/Data-Science-Python      # o git pull si ya lo tienen
-cp -r Data-Science-Python/sessions/04-mcp-claude-code/proyecto mcp-bcrp
-cd mcp-bcrp && git init
-
-uv run pytest -q                                               # esperado: 1 passed, 7 failed
-
-claude mcp add --transport http fastmcp-docs https://gofastmcp.com/mcp
-claude
+```powershell
+git clone https://github.com/bocchienjoyer/mcp-bcrp.git
+cd mcp-bcrp
+uv sync --frozen
+uv run --frozen pytest -q
 ```
 
-`uv run` crea el entorno la primera vez. La primera prueba baja el catálogo del BCRP (unos 7 MB) a `datos/`, que git
-ignora. El MCP `fastmcp-docs` le da a Claude la documentación de FastMCP 4, más nueva que lo que el modelo aprendió.
+Las ocho pruebas originales de `test_server.py` se conservan sin cambios y pasan.
+Hay 27 comprobaciones complementarias; el total actual es 35 aprobadas.
+Consulta [CONEXION.md](CONEXION.md) para registrar `bcrp` y `fetch`, recargar la conexión y comprobar `/mcp`.
+`.mcp.json` conserva la configuración compatible con el recorrido original de Claude; `codex-mcp.example.toml` muestra la equivalente para Codex.
 
-Un buen primer mensaje: *«Lee server.py y test_server.py. Antes de escribir código, explícame qué pide el TODO 1 y qué
-formato de fechas usa la API.»* Claude puede escribir el código, pero ustedes tienen que poder explicar cada línea.
+## Usarlo conversando
 
-## Parte 1 · Servidor (35 min)
+Con el MCP activado, pregunta normalmente. Por ejemplo:
 
-Completen los TODO de `server.py` en orden. El comentario de cada uno trae lo que necesitan saber de la API.
+- ¿Cuánto está la plata hoy?
+- ¿Qué subió más entre el cierre de 2025 y el 27 de octubre de 2026: cobre, plata u oro?
+- ¿Cuál de esos tres creció más entre el 27 de octubre de 2016 y el 27 de octubre de 2026?
 
-| TODO | Qué agregan | Prueba que lo revisa |
-|---|---|---|
-| 1 | `serie(codigo, desde, hasta)`: los datos y la URL de la fuente | `test_serie_mensual`, `test_serie_diaria`, `test_codigo_inexistente_da_un_error_claro` |
-| 2 | `resumen(codigo, desde, hasta)`: primero, último, cambio, variación, promedio, máximo y mínimo | `test_resumen_sin_cuentas_a_mano` |
-| 3 | Una herramienta suya, con un docstring que diga cuándo usarla | `test_cuatro_herramientas_como_minimo` |
-| 4 | Un recurso, por ejemplo `bcrp://serie/{codigo}` | `test_un_recurso` |
-| 5 | Un prompt, por ejemplo `informe(tema)` | `test_un_prompt` |
+El asistente debe consultar las herramientas y responder con fecha, unidad, código y fuente.
+«Hoy» puede devolver el último dato publicado por el BCRP; debe indicarse la fecha real del dato.
+La [guía sencilla](GUIA.md) explica las piezas sin asumir conocimientos previos.
 
-```bash
-uv run pytest -q -k serie        # solo las pruebas de serie
-uv run pytest -q                 # todas: la meta es 8 passed
+## Repetir la evaluación
+
+```powershell
+uv run --frozen verificar_referencias.py
+uv run --frozen evaluar.py
+uv run --frozen evaluar.py --experimento sin_abstencion --modos memoria
+uv run --frozen auditar_resultados.py
+uv run --frozen generar_informe.py
 ```
 
-El TODO 1 es el más largo: los meses llegan como `Ene.2025`, los días como `01.Oct.26` y setiembre viene escrito
-`Set`. Si a los 35 minutos no tienen 8 de 8, pasen igual a la parte 2: con `buscar_series` y `serie` ya se puede evaluar.
+Se ejecutan 20 llamadas base y 10 del experimento. Usa la sesión de ChatGPT de Codex; no requiere agregar una clave de OpenAI.
+Una nueva corrida consume uso del modelo y puede producir respuestas y tiempos distintos.
+Para regenerar la figura y el informe desde los resultados incluidos basta ejecutar `generar_informe.py`.
 
-Para ver qué devuelve una herramienta sin pasar por Claude:
+El diagnóstico opcional, separado de la puntuación base, se repite con:
 
-```python
-import asyncio
-from fastmcp import Client
-from server import mcp
-
-async def main():
-    async with Client(mcp) as c:
-        r = await c.call_tool("serie", {"codigo": "PN01273PM", "desde": "2026-01", "hasta": "2026-09"})
-        print(r.data)
-
-asyncio.run(main())
+```powershell
+uv run --frozen evaluar.py --preguntas preguntas_diagnostico.csv --ids cobre_ago26 --modos mcp
 ```
 
-Con Node instalado, `npx @modelcontextprotocol/inspector uv run server.py` abre una página para llamar cada
-herramienta a mano.
-
-## Parte 2 · Conectar (10 min)
-
-```bash
-claude mcp add --scope project bcrp -- uv run server.py
-claude mcp add --scope project fetch -- uvx mcp-server-fetch
-cat .mcp.json
-```
-
-Abran `claude` en la carpeta. Si les pregunta si aprueban los servidores de `.mcp.json`, acepten: son los suyos. Prueben:
-
-1. `/mcp`: los dos servidores conectados, con sus herramientas.
-2. Una pregunta, por ejemplo *«¿Cuál fue la inflación de Lima a 12 meses en setiembre de 2026?»*. Revisen en el detalle
-   que Claude llamó a `buscar_series` y luego a `resumen` o `serie`, en vez de calcular a mano.
-3. Un recurso: `@bcrp:bcrp://serie/PN01273PM ¿desde cuándo hay datos de esta serie?`
-4. Un prompt: `/mcp__bcrp__informe inflación`
-5. Fetch: *«Lee https://gofastmcp.com/llms.txt y dime qué secciones tiene la documentación de FastMCP.»*
-
-## Parte 3 · Evaluar (25 min)
-
-1. Agreguen 2 filas a `preguntas.csv` sobre series que les interesen (empleo, exportaciones, crédito, depósitos,
-   precios de metales...). Saquen la `verdad` de [estadisticas.bcrp.gob.pe](https://estadisticas.bcrp.gob.pe), no de su
-   propio MCP, y pongan una `tolerancia` de redondeo: 0.05 para porcentajes, algo mayor para montos grandes.
-2. Corran la evaluación. Con 10 preguntas en dos modos tarda uno o dos minutos:
-
-   ```bash
-   uv run evaluar.py                  # memoria contra mcp, con Haiku; escribe resultados.csv
-   ```
-
-   Si el BCRP empieza a responder «no respondió con datos», bajen el paralelismo con `--paralelo 2`.
-3. Experimento extra, para el cuarto punto de la evaluación. Antes guarden la corrida base con
-   `cp resultados.csv resultados_base.csv`, y luego elijan uno:
-   - **Sin salida fácil:** en `evaluar.py`, borren de `INSTRUCCION` la frase «Si no puedes saberlo con certeza, pon
-     valor null: no estimes.» y vuelvan a correr. ¿Claude sigue diciendo que no sabe, o inventa una cifra?
-   - **Contra la búsqueda web:** `uv run evaluar.py --modos memoria web mcp`. Cada pregunta con web tarda unos 25 s.
-
-Para referencia, con las 8 preguntas del archivo y Haiku: memoria 0 de 8 (8 «no sé»), web 7 de 8, MCP 8 de 8.
-
-## Parte 4 · Informe (15 min)
-
-Escriban `informe.md` con:
-
-- La tabla de `resultados.csv`: aciertos, errores y «no sé» por modo, y los segundos promedio.
-- Qué preguntas falló cada modo y por qué. La columna `fuente` dice de dónde sacó Claude cada cifra.
-- Dos cifras de su MCP comprobadas a mano en la web del BCRP, con el link de la tabla donde las vieron.
-- Una figura, `grafico.png`. Para usar matplotlib: `uv add matplotlib`. Sirve el porcentaje de aciertos por modo o la
-  serie que usa su herramienta propia.
-- Tres a cinco líneas de conclusión: ¿cuándo vale la pena construir un MCP y cuándo basta la búsqueda web?
-
-Luego `git add`, `git commit`, creen el repositorio en GitHub, hagan `git push` y peguen el link en el issue de la sesión.
-
-## Entrega
-
-`server.py`, `test_server.py` sin cambios, `.mcp.json`, `preguntas.csv` con 10 preguntas, `resultados.csv`,
-`informe.md` y `grafico.png`. La carpeta `datos/` no se sube: se vuelve a bajar sola.
-
-## Rúbrica (20 puntos)
-
-| Criterio | Puntos | Qué se mira |
-|---|---|---|
-| Pruebas | 6 | 8 de 8 en verde; un punto menos por cada prueba que falle |
-| Herramienta propia | 3 | Útil, con un docstring que diga cuándo usarla, y con su fuente en la respuesta |
-| Recurso y prompt | 2 | Funcionan en Claude Code con `@` y con `/` |
-| `.mcp.json` | 2 | En el repo, con `bcrp` y `fetch`, y sin claves |
-| Evaluación | 4 | 10 preguntas, dos suyas con la verdad revisada a mano (3); un experimento extra (1) |
-| Informe | 3 | Qué acertó y qué no, por qué, una figura y dos cifras comprobadas en la web del BCRP |
-
-## Si se atascan
-
-| Síntoma | Qué hacer |
-|---|---|
-| «El BCRP no respondió con datos» | La API limita los pedidos seguidos. Esperen unos segundos y reintenten; guarden en caché lo que ya bajaron |
-| `/mcp` muestra `bcrp` con error | Corran `uv run pytest -q` para ver el error de Python, o `claude mcp get bcrp` para ver el comando |
-| Claude no usa su herramienta | Mejoren el docstring: qué hace, cuándo usarla y un ejemplo de argumentos |
-| Claude escribe código de FastMCP 2 | Pídanle que consulte `fastmcp-docs` antes de responder |
+`verificar_referencias.py` lee tablas HTML del BCRP independientemente de nuestro servidor.
+Guarda los valores visibles, sus enlaces y huellas de las páginas en `verificacion_web/`.
+También se contrastaron dos tablas en el navegador: [registro](verificacion_web/comprobacion_visual.md).
+Las carpetas de datos descargados, entornos, registros brutos y copias HTML quedan excluidas de Git.

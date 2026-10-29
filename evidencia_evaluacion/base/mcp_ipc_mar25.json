@@ -1,0 +1,51 @@
+{
+  "id": "ipc_mar25",
+  "pregunta": "¿Cuál fue la variación mensual del IPC de Lima Metropolitana en marzo de 2025, en %?",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "modo": "mcp",
+  "experimento": "base",
+  "respuesta": {
+    "valor": 0.810159321766145,
+    "unidad": "%",
+    "fuente": "BCRP, serie PN01271PM: Índice de precios Lima Metropolitana (var% mensual) - IPC, marzo de 2025. https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN01271PM/json/2025-3/2025-3",
+    "ganador": null,
+    "desde": null,
+    "hasta": null,
+    "explicacion": "El IPC de Lima Metropolitana aumentó 0,81 % en marzo de 2025 respecto al mes anterior (redondeado a dos decimales)."
+  },
+  "llamadas_mcp": [
+    {
+      "server": "bcrp",
+      "tool": "buscar_series",
+      "arguments": {
+        "texto": "ipc",
+        "frecuencia": "Mensual",
+        "limite": 20
+      },
+      "status": "completed"
+    },
+    {
+      "server": "bcrp",
+      "tool": "serie",
+      "arguments": {
+        "codigo": "PN01271PM",
+        "desde": "2025-03",
+        "hasta": "2025-03"
+      },
+      "status": "completed"
+    }
+  ],
+  "uso": {
+    "input_tokens": 52408,
+    "cached_input_tokens": 37248,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 344,
+    "reasoning_output_tokens": 59
+  },
+  "segundos": 30.24,
+  "resultado": "acierta",
+  "problemas": [],
+  "descubrimientos_sin_datos": [],
+  "sha256_eventos": "754e7e21373d3643e447e86097ec6d2694d998bf4a82ec7bc823081223727d70"
+}

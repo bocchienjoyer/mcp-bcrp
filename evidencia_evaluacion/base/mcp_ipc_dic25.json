@@ -1,0 +1,50 @@
+{
+  "id": "ipc_dic25",
+  "pregunta": "¿Cuál fue la inflación interanual (variación del IPC en 12 meses) de Lima Metropolitana en diciembre de 2025, en %?",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "modo": "mcp",
+  "experimento": "base",
+  "respuesta": {
+    "valor": 1.50879973918667,
+    "unidad": "%",
+    "fuente": "BCRP, serie PN01273PM: Índice de precios Lima Metropolitana (var% 12 meses) - IPC, diciembre de 2025. https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN01273PM/json/2025-12/2025-12",
+    "ganador": null,
+    "desde": null,
+    "hasta": null,
+    "explicacion": "La inflación interanual de Lima Metropolitana en diciembre de 2025 fue 1,51 %, redondeada a dos decimales."
+  },
+  "llamadas_mcp": [
+    {
+      "server": "bcrp",
+      "tool": "buscar_series",
+      "arguments": {
+        "texto": "ipc 12 meses",
+        "frecuencia": "Mensual"
+      },
+      "status": "completed"
+    },
+    {
+      "server": "bcrp",
+      "tool": "serie",
+      "arguments": {
+        "codigo": "PN01273PM",
+        "desde": "2025-12",
+        "hasta": "2025-12"
+      },
+      "status": "completed"
+    }
+  ],
+  "uso": {
+    "input_tokens": 50830,
+    "cached_input_tokens": 45696,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 284,
+    "reasoning_output_tokens": 0
+  },
+  "segundos": 38.96,
+  "resultado": "acierta",
+  "problemas": [],
+  "descubrimientos_sin_datos": [],
+  "sha256_eventos": "cbf75dcee7f72622866838b98af73af83829131b14aad580f18be0e6d47c78a3"
+}

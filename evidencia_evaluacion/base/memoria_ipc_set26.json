@@ -1,0 +1,49 @@
+{
+  "id": "ipc_set26",
+  "pregunta": "¿Cuál fue la inflación interanual (variación del IPC en 12 meses) de Lima Metropolitana en setiembre de 2026, en %?",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "modo": "memoria",
+  "experimento": "base",
+  "respuesta": {
+    "valor": null,
+    "unidad": "%",
+    "fuente": "No se consultaron fuentes externas: no hay herramientas de consulta de datos habilitadas.",
+    "ganador": null,
+    "desde": null,
+    "hasta": null,
+    "explicacion": "No puedo verificar con certeza la variación del IPC de Lima Metropolitana en 12 meses correspondiente a setiembre de 2026."
+  },
+  "llamadas_mcp": [],
+  "uso": {
+    "input_tokens": 33405,
+    "cached_input_tokens": 10752,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 214,
+    "reasoning_output_tokens": 20
+  },
+  "segundos": 18.78,
+  "resultado": "no sabe",
+  "problemas": [],
+  "descubrimientos_sin_datos": [
+    {
+      "server": "codex",
+      "tool": "list_mcp_resources",
+      "arguments": {},
+      "status": "completed",
+      "resultado": {
+        "resources": []
+      }
+    },
+    {
+      "server": "codex",
+      "tool": "list_mcp_resource_templates",
+      "arguments": {},
+      "status": "completed",
+      "resultado": {
+        "resourceTemplates": []
+      }
+    }
+  ],
+  "sha256_eventos": "fa4fcbd3a1c8487898b2498fc72920dd941a7abb60c64edbaff0af3d60b48355"
+}

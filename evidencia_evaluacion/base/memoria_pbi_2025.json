@@ -1,0 +1,49 @@
+{
+  "id": "pbi_2025",
+  "pregunta": "¿Cuánto creció el PBI real del Perú en 2025 según el BCRP, en %?",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "modo": "memoria",
+  "experimento": "base",
+  "respuesta": {
+    "valor": null,
+    "unidad": "%",
+    "fuente": "No hay herramientas de consulta del BCRP habilitadas ni fuentes disponibles para verificar la cifra.",
+    "ganador": null,
+    "desde": null,
+    "hasta": null,
+    "explicacion": "No puedo confirmar con certeza cuánto creció el PBI real del Perú en 2025 según el BCRP."
+  },
+  "llamadas_mcp": [],
+  "uso": {
+    "input_tokens": 33046,
+    "cached_input_tokens": 21632,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 219,
+    "reasoning_output_tokens": 12
+  },
+  "segundos": 14.01,
+  "resultado": "no sabe",
+  "problemas": [],
+  "descubrimientos_sin_datos": [
+    {
+      "server": "codex",
+      "tool": "list_mcp_resources",
+      "arguments": {},
+      "status": "completed",
+      "resultado": {
+        "resources": []
+      }
+    },
+    {
+      "server": "codex",
+      "tool": "list_mcp_resource_templates",
+      "arguments": {},
+      "status": "completed",
+      "resultado": {
+        "resourceTemplates": []
+      }
+    }
+  ],
+  "sha256_eventos": "d555bd281fbd6f73e508d09cd37bf0b3d6af3e974970a5f7eac081e9c4fdb65f"
+}

@@ -1,0 +1,30 @@
+{
+  "id": "tc_15oct26",
+  "pregunta": "¿Cuál fue el tipo de cambio interbancario venta del 15 de octubre de 2026 según el BCRP, en soles por dólar?",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "modo": "memoria",
+  "experimento": "sin_abstencion",
+  "respuesta": {
+    "valor": null,
+    "unidad": "soles por dólar",
+    "fuente": "BCRP; no se consultaron enlaces porque no hay herramientas de consulta habilitadas para esa fuente.",
+    "ganador": null,
+    "desde": null,
+    "hasta": null,
+    "explicacion": "No puedo verificar el tipo de cambio interbancario venta del 15 de octubre de 2026 con las herramientas disponibles."
+  },
+  "llamadas_mcp": [],
+  "descubrimientos_sin_datos": [],
+  "uso": {
+    "input_tokens": 32748,
+    "cached_input_tokens": 21504,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 199,
+    "reasoning_output_tokens": 0
+  },
+  "segundos": 25.2,
+  "resultado": "no sabe",
+  "problemas": [],
+  "sha256_eventos": "f01e8e974ea77921ef452ba151d34563fd75bff5f2677754997c77d90d9c042b"
+}

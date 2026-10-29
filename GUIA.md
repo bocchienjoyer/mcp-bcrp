@@ -82,8 +82,10 @@ comprobamos su arranque como procesos independientes por stdio usando `verificar
 La comprobación recuperó herramientas, ficha, prompt y un precio del oro, y leyó una página con Fetch.
 Después de recargar las conexiones, `/mcp` mostró ambos servidores activados. Comprobamos
 llamadas directas desde el chat a `buscar_series`, `serie` y Fetch; también se descubrió
-la plantilla del recurso. La conexión conversacional está confirmada. Falta evaluar
-las diez preguntas. Los pasos y la comprobación están en [CONEXION.md](CONEXION.md).
+la plantilla del recurso. La conexión conversacional está confirmada. Ya evaluamos
+las diez preguntas con OpenAI: memoria acertó 1/10 y MCP 9/10 frente a la referencia.
+El [informe](informe.md) explica los resultados y la ambigüedad de la pregunta del cobre.
+Los pasos de conexión están en [CONEXION.md](CONEXION.md).
 
 ## Nuestra herramienta propia: comparar dos series
 

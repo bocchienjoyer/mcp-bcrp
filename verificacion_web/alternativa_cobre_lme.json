@@ -1,0 +1,13 @@
+{
+  "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN01652XM/html/2026-8/2026-8",
+  "consultada_utc": "2026-10-29T02:38:04.169859+00:00",
+  "sha256_html": "267db7808032fbd5719dd8c5e90e5e87221423e0f8c3d19fe823a6ec5d9dd69f",
+  "filas": [
+    {
+      "etiqueta": "Ago26",
+      "valores": [
+        651.0
+      ]
+    }
+  ]
+}

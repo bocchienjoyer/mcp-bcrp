@@ -1,0 +1,2 @@
+id,modo,experimento,modelo,esfuerzo,verdad,valor,ganador_verdad,ganador,desde,hasta,unidad,fuente,segundos,llamadas_mcp,descubrimientos_vacios,resultado,error
+cobre_ago26,mcp,base,gpt-6.1-sol,low,689.70,689.698759925968,,,,,centavos de US$ por libra,"BCRP, serie PN38784BM: Exportaciones de productos tradicionales (precios) - Mineros - Cobre - Precio. https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN38784BM/json/2026-8/2026-8",29.32,2,0,acierta,

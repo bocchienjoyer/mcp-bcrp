@@ -1,0 +1,11 @@
+{
+  "fecha_utc": "2026-10-29T02:36:06.536536+00:00",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "experimento": "base",
+  "preguntas": 10,
+  "llamadas": 20,
+  "paralelo": 2,
+  "codex_version": "codex-cli 0.165.0-alpha.1.2",
+  "aislamiento": "Sesiones efímeras en carpetas vacías, sin historial, shell, apps, plugins ni web; solo bcrp en modo mcp."
+}

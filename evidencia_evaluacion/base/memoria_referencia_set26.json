@@ -1,0 +1,49 @@
+{
+  "id": "referencia_set26",
+  "pregunta": "¿Cuál era la tasa de referencia de la política monetaria del BCRP en setiembre de 2026, en %?",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "modo": "memoria",
+  "experimento": "base",
+  "respuesta": {
+    "valor": null,
+    "unidad": "%",
+    "fuente": "No hay fuentes de consulta habilitadas con datos del BCRP; no se consultaron enlaces.",
+    "ganador": null,
+    "desde": null,
+    "hasta": null,
+    "explicacion": "No puedo verificar con certeza la tasa de referencia del BCRP correspondiente a setiembre de 2026."
+  },
+  "llamadas_mcp": [],
+  "uso": {
+    "input_tokens": 33415,
+    "cached_input_tokens": 21888,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 223,
+    "reasoning_output_tokens": 25
+  },
+  "segundos": 57.75,
+  "resultado": "no sabe",
+  "problemas": [],
+  "descubrimientos_sin_datos": [
+    {
+      "server": "codex",
+      "tool": "list_mcp_resources",
+      "arguments": {},
+      "status": "completed",
+      "resultado": {
+        "resources": []
+      }
+    },
+    {
+      "server": "codex",
+      "tool": "list_mcp_resource_templates",
+      "arguments": {},
+      "status": "completed",
+      "resultado": {
+        "resourceTemplates": []
+      }
+    }
+  ],
+  "sha256_eventos": "a7de3f44547d900564384f1012baf987bb7f183adcb0177f365640c40e8d3fa4"
+}

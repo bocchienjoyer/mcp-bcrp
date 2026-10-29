@@ -1,0 +1,50 @@
+{
+  "id": "referencia_set26",
+  "pregunta": "¿Cuál era la tasa de referencia de la política monetaria del BCRP en setiembre de 2026, en %?",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "modo": "mcp",
+  "experimento": "base",
+  "respuesta": {
+    "valor": 4.25,
+    "unidad": "%",
+    "fuente": "BCRP, serie PD04722MM: Tasa de Referencia de la Política Monetaria, setiembre de 2026. https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04722MM/json/2026-9/2026-9",
+    "ganador": null,
+    "desde": null,
+    "hasta": null,
+    "explicacion": "La serie mensual oficial registra una tasa de referencia de 4.25 % en setiembre de 2026."
+  },
+  "llamadas_mcp": [
+    {
+      "server": "bcrp",
+      "tool": "buscar_series",
+      "arguments": {
+        "texto": "tasa de referencia",
+        "frecuencia": "Mensual"
+      },
+      "status": "completed"
+    },
+    {
+      "server": "bcrp",
+      "tool": "serie",
+      "arguments": {
+        "codigo": "PD04722MM",
+        "desde": "2026-09",
+        "hasta": "2026-09"
+      },
+      "status": "completed"
+    }
+  ],
+  "uso": {
+    "input_tokens": 48654,
+    "cached_input_tokens": 35328,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 306,
+    "reasoning_output_tokens": 27
+  },
+  "segundos": 27.61,
+  "resultado": "acierta",
+  "problemas": [],
+  "descubrimientos_sin_datos": [],
+  "sha256_eventos": "b541784f6a58b5da8bfe755cb9a579f5e3c980b4ae13afb4e33a2a72b80192d2"
+}

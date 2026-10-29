@@ -1,0 +1,51 @@
+{
+  "id": "pbi_2025",
+  "pregunta": "¿Cuánto creció el PBI real del Perú en 2025 según el BCRP, en %?",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "modo": "mcp",
+  "experimento": "base",
+  "respuesta": {
+    "valor": 3.43057183175782,
+    "unidad": "%",
+    "fuente": "BCRP, serie PM04908AA: Ingreso nacional disponible (variaciones porcentuales reales) - PBI, periodo 2025. https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PM04908AA/json/2025/2025",
+    "ganador": null,
+    "desde": null,
+    "hasta": null,
+    "explicacion": "El PBI real del Perú creció aproximadamente 3,43 % en 2025 respecto de 2024."
+  },
+  "llamadas_mcp": [
+    {
+      "server": "bcrp",
+      "tool": "buscar_series",
+      "arguments": {
+        "texto": "PBI",
+        "frecuencia": "Anual",
+        "limite": 30
+      },
+      "status": "completed"
+    },
+    {
+      "server": "bcrp",
+      "tool": "serie",
+      "arguments": {
+        "codigo": "PM04908AA",
+        "desde": "2025",
+        "hasta": "2025"
+      },
+      "status": "completed"
+    }
+  ],
+  "uso": {
+    "input_tokens": 55235,
+    "cached_input_tokens": 38784,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 284,
+    "reasoning_output_tokens": 9
+  },
+  "segundos": 26.66,
+  "resultado": "acierta",
+  "problemas": [],
+  "descubrimientos_sin_datos": [],
+  "sha256_eventos": "51d9575e421ef5c9b20c94834280fb39e12952d26b92a60e06c8cc71e90f4acc"
+}

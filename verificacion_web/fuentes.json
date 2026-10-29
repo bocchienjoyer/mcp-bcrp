@@ -1,0 +1,151 @@
+[
+  {
+    "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04701XD-PD04702XD-PD04704XD/html/2016-10-27/2016-10-27",
+    "consultada_utc": "2026-10-29T02:29:40.012678+00:00",
+    "sha256_html": "746509571b003faeef7d7d0f4122bc5215c6eb123ed0889fd8f050a9540e9746",
+    "filas": [
+      {
+        "etiqueta": "27Oct16",
+        "valores": [
+          216.54,
+          17.65,
+          1266.25
+        ]
+      }
+    ]
+  },
+  {
+    "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04701XD-PD04702XD-PD04704XD/html/2025-12-31/2025-12-31",
+    "consultada_utc": "2026-10-29T02:29:41.507663+00:00",
+    "sha256_html": "029ed098e2ea549452cb0036a4e6781651e6a494cfafab4c2a1316d890de206a",
+    "filas": [
+      {
+        "etiqueta": "31Dic25",
+        "valores": [
+          567.17,
+          71.26,
+          4319.37
+        ]
+      }
+    ]
+  },
+  {
+    "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04701XD-PD04702XD-PD04704XD/html/2026-10-27/2026-10-27",
+    "consultada_utc": "2026-10-29T02:29:42.884589+00:00",
+    "sha256_html": "d8e73ff473b91300525b456e6b1cd25fd736840f38053d2f8766e7d928045a91",
+    "filas": [
+      {
+        "etiqueta": "27Oct26",
+        "valores": [
+          663.38,
+          54.36,
+          4060.13
+        ]
+      }
+    ]
+  },
+  {
+    "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN01273PM/html/2026-9/2026-9",
+    "consultada_utc": "2026-10-29T02:29:44.692504+00:00",
+    "sha256_html": "28cc0b0869ef4ec65ed46f6dd49d3fb99035141479bb53aec0b84332b4e88be6",
+    "filas": [
+      {
+        "etiqueta": "Sep26",
+        "valores": [
+          4.55
+        ]
+      }
+    ]
+  },
+  {
+    "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN01273PM/html/2025-12/2025-12",
+    "consultada_utc": "2026-10-29T02:29:46.616300+00:00",
+    "sha256_html": "f18b122ca0905fa8a0d3cebf6c294f405f2a09d90d83a17ae76f0d0f5d113840",
+    "filas": [
+      {
+        "etiqueta": "Dic25",
+        "valores": [
+          1.51
+        ]
+      }
+    ]
+  },
+  {
+    "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN01271PM/html/2025-3/2025-3",
+    "consultada_utc": "2026-10-29T02:29:48.386966+00:00",
+    "sha256_html": "136776dafa3910a74fcb754d186bc4a7cf7c10b233ea9ae552af0f09a346fe9b",
+    "filas": [
+      {
+        "etiqueta": "Mar25",
+        "valores": [
+          0.81
+        ]
+      }
+    ]
+  },
+  {
+    "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04722MM/html/2026-9/2026-9",
+    "consultada_utc": "2026-10-29T02:29:50.288238+00:00",
+    "sha256_html": "8058f8e67557710618cf214090dc19793e3acd42725972316e6bf38a888f1be2",
+    "filas": [
+      {
+        "etiqueta": "Sep26",
+        "valores": [
+          4.25
+        ]
+      }
+    ]
+  },
+  {
+    "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04638PD/html/2026-10-15/2026-10-15",
+    "consultada_utc": "2026-10-29T02:29:51.647064+00:00",
+    "sha256_html": "ea0801895e35295ebc3b1304441b28dc3286808f428df3ddde28c3f84fbcbcf3",
+    "filas": [
+      {
+        "etiqueta": "15Oct26",
+        "valores": [
+          3.428
+        ]
+      }
+    ]
+  },
+  {
+    "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN00027MM/html/2026-8/2026-8",
+    "consultada_utc": "2026-10-29T02:29:53.490012+00:00",
+    "sha256_html": "6ec6f14e3f742e4948c68219695e44f5538c85820c40d948c1b21a12fc1210b5",
+    "filas": [
+      {
+        "etiqueta": "Ago26",
+        "valores": [
+          96518.0
+        ]
+      }
+    ]
+  },
+  {
+    "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN38784BM/html/2026-8/2026-8",
+    "consultada_utc": "2026-10-29T02:29:55.250966+00:00",
+    "sha256_html": "e81444d1736fdee2fea88fedf49c16e2f31b19c292a08780cee624d8a7c749f8",
+    "filas": [
+      {
+        "etiqueta": "Ago26",
+        "valores": [
+          689.7
+        ]
+      }
+    ]
+  },
+  {
+    "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PM04923AA/html/2025/2025",
+    "consultada_utc": "2026-10-29T02:29:57.115039+00:00",
+    "sha256_html": "2bfb60e434822360ef6d555fd6d8953f5c3e5108d63aa6685c349d10c2b45780",
+    "filas": [
+      {
+        "etiqueta": "2025",
+        "valores": [
+          3.4
+        ]
+      }
+    ]
+  }
+]

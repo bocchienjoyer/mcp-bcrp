@@ -1,0 +1,50 @@
+{
+  "id": "ipc_set26",
+  "pregunta": "¿Cuál fue la inflación interanual (variación del IPC en 12 meses) de Lima Metropolitana en setiembre de 2026, en %?",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "modo": "mcp",
+  "experimento": "base",
+  "respuesta": {
+    "valor": 4.54865469481509,
+    "unidad": "%",
+    "fuente": "BCRP, serie PN01273PM: Índice de precios Lima Metropolitana (var% 12 meses) - IPC, setiembre de 2026. https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN01273PM/json/2026-9/2026-9",
+    "ganador": null,
+    "desde": null,
+    "hasta": null,
+    "explicacion": "La inflación interanual corresponde a la variación del IPC en los 12 meses terminados en setiembre de 2026."
+  },
+  "llamadas_mcp": [
+    {
+      "server": "bcrp",
+      "tool": "buscar_series",
+      "arguments": {
+        "texto": "ipc 12 meses",
+        "frecuencia": "Mensual"
+      },
+      "status": "completed"
+    },
+    {
+      "server": "bcrp",
+      "tool": "serie",
+      "arguments": {
+        "codigo": "PN01273PM",
+        "desde": "2026-09",
+        "hasta": "2026-09"
+      },
+      "status": "completed"
+    }
+  ],
+  "uso": {
+    "input_tokens": 50893,
+    "cached_input_tokens": 36608,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 300,
+    "reasoning_output_tokens": 10
+  },
+  "segundos": 24.18,
+  "resultado": "acierta",
+  "problemas": [],
+  "descubrimientos_sin_datos": [],
+  "sha256_eventos": "9e649fd955696c50ebb7c884f35c353347812613c4b883b6463d66f18a99faae"
+}

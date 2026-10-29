@@ -1,0 +1,30 @@
+{
+  "id": "ipc_dic25",
+  "pregunta": "¿Cuál fue la inflación interanual (variación del IPC en 12 meses) de Lima Metropolitana en diciembre de 2025, en %?",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "modo": "memoria",
+  "experimento": "base",
+  "respuesta": {
+    "valor": null,
+    "unidad": "%",
+    "fuente": "No se consultaron fuentes: no hay una herramienta de consulta estadística habilitada y se excluyó la búsqueda web.",
+    "ganador": null,
+    "desde": null,
+    "hasta": null,
+    "explicacion": "No puedo verificar con certeza la variación del IPC de Lima Metropolitana en los 12 meses terminados en diciembre de 2025."
+  },
+  "llamadas_mcp": [],
+  "uso": {
+    "input_tokens": 21786,
+    "cached_input_tokens": 10752,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 172,
+    "reasoning_output_tokens": 9
+  },
+  "segundos": 13.46,
+  "resultado": "no sabe",
+  "problemas": [],
+  "descubrimientos_sin_datos": [],
+  "sha256_eventos": "cf136930e336e51e1cdedee5f6a3f5169a7974409aed6d7e02dd48ab410ca342"
+}

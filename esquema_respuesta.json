@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["valor", "unidad", "fuente", "ganador", "desde", "hasta", "explicacion"],
+  "properties": {
+    "valor": {"type": ["number", "null"]},
+    "unidad": {"type": "string"},
+    "fuente": {"type": "string"},
+    "ganador": {"type": ["string", "null"]},
+    "desde": {"type": ["string", "null"]},
+    "hasta": {"type": ["string", "null"]},
+    "explicacion": {"type": "string"}
+  }
+}

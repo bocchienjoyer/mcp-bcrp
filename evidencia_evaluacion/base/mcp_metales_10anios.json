@@ -1,0 +1,110 @@
+{
+  "id": "metales_10anios",
+  "pregunta": "Según las cotizaciones internacionales diarias del BCRP, entre el 27 de octubre de 2016 y el 27 de octubre de 2026, ¿cuál tuvo el mayor crecimiento porcentual: el cobre, la plata o el oro? Indica el metal ganador, su variación porcentual y las fechas comparadas.",
+  "modelo": "gpt-6.1-sol",
+  "esfuerzo": "low",
+  "modo": "mcp",
+  "experimento": "base",
+  "respuesta": {
+    "valor": 220.6420533070089,
+    "unidad": "%",
+    "fuente": "BCRP, cotizaciones internacionales diarias. Cobre (PD04701XD): https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04701XD/json/2016-10-27/2026-10-27 ; Plata (PD04702XD): https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04702XD/json/2016-10-27/2026-10-27 ; Oro (PD04704XD): https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04704XD/json/2016-10-27/2026-10-27",
+    "ganador": "oro",
+    "desde": "2016-10-27",
+    "hasta": "2026-10-27",
+    "explicacion": "El oro aumentó de 1266.25 a 4060.13 US$ por onza troy: 220.64%, superior a la plata (208.08%) y al cobre (206.35%)."
+  },
+  "llamadas_mcp": [
+    {
+      "server": "bcrp",
+      "tool": "buscar_series",
+      "arguments": {
+        "texto": "plata",
+        "frecuencia": "Diaria"
+      },
+      "status": "completed"
+    },
+    {
+      "server": "bcrp",
+      "tool": "buscar_series",
+      "arguments": {
+        "texto": "cobre",
+        "frecuencia": "Diaria"
+      },
+      "status": "completed"
+    },
+    {
+      "server": "bcrp",
+      "tool": "buscar_series",
+      "arguments": {
+        "texto": "oro",
+        "frecuencia": "Diaria"
+      },
+      "status": "completed"
+    },
+    {
+      "server": "bcrp",
+      "tool": "serie",
+      "arguments": {
+        "codigo": "PD04702XD",
+        "desde": "2026-10-27",
+        "hasta": "2026-10-27"
+      },
+      "status": "completed"
+    },
+    {
+      "server": "bcrp",
+      "tool": "serie",
+      "arguments": {
+        "codigo": "PD04701XD",
+        "desde": "2026-10-27",
+        "hasta": "2026-10-27"
+      },
+      "status": "completed"
+    },
+    {
+      "server": "bcrp",
+      "tool": "serie",
+      "arguments": {
+        "codigo": "PD04704XD",
+        "desde": "2026-10-27",
+        "hasta": "2026-10-27"
+      },
+      "status": "completed"
+    },
+    {
+      "server": "bcrp",
+      "tool": "comparar_series",
+      "arguments": {
+        "codigo_a": "PD04701XD",
+        "codigo_b": "PD04702XD",
+        "desde": "2016-10-27",
+        "hasta": "2026-10-27"
+      },
+      "status": "completed"
+    },
+    {
+      "server": "bcrp",
+      "tool": "comparar_series",
+      "arguments": {
+        "codigo_a": "PD04701XD",
+        "codigo_b": "PD04704XD",
+        "desde": "2016-10-27",
+        "hasta": "2026-10-27"
+      },
+      "status": "completed"
+    }
+  ],
+  "uso": {
+    "input_tokens": 65478,
+    "cached_input_tokens": 58496,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 538,
+    "reasoning_output_tokens": 10
+  },
+  "segundos": 39.14,
+  "resultado": "acierta",
+  "problemas": [],
+  "descubrimientos_sin_datos": [],
+  "sha256_eventos": "94113d9415e3869a578e900c6abac0fe5778e18bfa05dd9f61d7aef2a4fb8b7a"
+}

@@ -1,0 +1,2 @@
+id,pregunta,verdad,tolerancia,serie,periodo,tipo,ganador,desde,hasta,fuente_verificacion
+cobre_ago26,"¿Cuál fue el precio promedio de EXPORTACIÓN del cobre en agosto de 2026 según el BCRP, en centavos de US$ por libra?",689.70,3.5,PN38784BM,2026-08,valor,,,,https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN38784BM/html/2026-8/2026-8
