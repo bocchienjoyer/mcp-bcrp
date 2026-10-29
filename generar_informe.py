@@ -82,6 +82,9 @@ def main():
                   "Paneles B–C: cálculos independientes con valores visibles en las tablas web del BCRP.", fontsize=9)
     fig.savefig(AQUI / "grafico.png", dpi=220, bbox_inches="tight")
     fig.savefig(AQUI / "grafico.svg", bbox_inches="tight")
+    svg = AQUI / "grafico.svg"
+    svg.write_text("\n".join(linea.rstrip() for linea in svg.read_text(encoding="utf-8").splitlines()) + "\n",
+                   encoding="utf-8")
     plt.close(fig)
 
     m, c, e = [s for _, s in estadisticas]
