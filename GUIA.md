@@ -63,9 +63,10 @@ observaciones disponibles, sin rellenar los datos ausentes con ceros.
 
 ## Qué comprobamos y qué falta
 
-Las ocho pruebas originales dan **6 aprobadas y 2 pendientes**.
+Las ocho pruebas originales dan **7 aprobadas y 1 pendiente**.
 Ya pasan la búsqueda, la consulta mensual, la consulta diaria, el resumen y el error por código inexistente.
 También pasa el requisito de cuatro herramientas: agregamos `comparar_series` como herramienta propia.
+Ya existe el recurso `bcrp://serie/{codigo}` y comprobamos la lectura de la ficha del oro.
 También comprobamos consultas anuales y trimestrales mediante un cliente MCP de Python.
 Las cuatro pruebas complementarias de `test_resumen_adicional.py` pasan: verifican las cuentas,
 el inicio en cero, una única observación y los extremos empatados. Las ocho pruebas originales
@@ -75,7 +76,7 @@ Las ocho pruebas complementarias de `test_comparar_adicional.py` pasan. Comprueb
 porcentajes con las mismas fechas, que se conserven las fuentes y que se manejen datos insuficientes,
 frecuencias distintas, bases no positivas, empates y descensos.
 
-Faltan el recurso y el prompt. Después conectaremos el servidor al
+Falta el prompt. Después conectaremos el servidor al
 asistente y evaluaremos las diez preguntas. Las pruebas actuales llaman al MCP desde Python;
 la conexión para usarlo conversando todavía está pendiente.
 
@@ -109,6 +110,23 @@ Las cuentas usan las cifras completas; la tabla las redondea para facilitar su l
 La diferencia entre las variaciones es de 11.22 puntos porcentuales.
 Fuentes: [cobre](https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN38784BM/json/2026-1/2026-8)
 y [oro](https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN38793BM/json/2026-1/2026-8).
+
+## El recurso: la ficha de una serie
+
+Un recurso MCP es información que el cliente puede leer. Nuestro recurso entrega la ficha
+de una serie usando el catálogo oficial que ya descargamos.
+
+Su dirección dentro del MCP es `bcrp://serie/{codigo}`. La parte `{codigo}` se sustituye por
+el código que queremos consultar. Por ejemplo: `bcrp://serie/PN38793BM` entrega la ficha del oro.
+
+La ficha incluye el código, nombre completo, categoría, frecuencia, fecha de inicio,
+fecha de actualización de la serie y enlace al catálogo del BCRP. La unidad se conserva
+dentro del nombre original: no la inventamos ni la deducimos de un precio.
+
+La ficha del oro identifica el **precio de exportación**, en **US$ por onza troy**, con
+frecuencia **mensual**. Esto permite comprobar qué representa el indicador antes de pedir valores.
+La fecha de actualización es la que figura en la copia del catálogo; no es la hora de la consulta.
+Si el código no existe, se devuelve un error claro en lugar de una ficha vacía.
 
 La [documentación oficial del BCRP](https://estadisticas.bcrp.gob.pe/estadisticas/series/ayuda/api)
 explica la dirección y los parámetros de las consultas.

@@ -321,6 +321,19 @@ def comparar_series(codigo_a: str, codigo_b: str, desde: str, hasta: str) -> dic
 
 # TODO 4 · Un recurso, por ejemplo la plantilla bcrp://serie/{codigo} con la ficha de la serie.
 
+
+@mcp.resource("bcrp://serie/{codigo}", mime_type="application/json")
+def ficha_serie(codigo: str) -> dict:
+    """Ficha del catálogo oficial del BCRP para identificar una serie antes de consultar valores.
+
+    Incluye código, nombre completo (con la unidad cuando el catálogo la indica),
+    categoría, frecuencia, fecha de inicio, fecha de actualización de la serie y
+    fuente del catálogo. Ejemplo: bcrp://serie/PN38793BM para el precio del oro.
+    Un código inexistente genera un error que identifica el código solicitado.
+    """
+    return {**_ficha(codigo), "fuente": URL_CATALOGO}
+
+
 # TODO 5 · Un prompt, por ejemplo informe(tema) que pida citar el código y el periodo de cada cifra.
 
 
