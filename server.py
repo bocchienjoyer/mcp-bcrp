@@ -14,6 +14,7 @@ import unicodedata
 from datetime import date
 from functools import cache
 from pathlib import Path
+from statistics import fmean
 
 import httpx
 import pandas as pd
@@ -218,6 +219,44 @@ def serie(codigo: str, desde: str, hasta: str) -> dict:
 
 # TODO 2 · resumen(codigo, desde, hasta): primero, ultimo, cambio, variacion_pct, promedio, maximo y minimo
 #   (los tres últimos con su periodo). Úsenla para que el modelo nunca haga cuentas a mano.
+
+
+@mcp.tool(annotations=SOLO_LECTURA)
+def resumen(codigo: str, desde: str, hasta: str) -> dict:
+    """Calcula un resumen de una serie del BCRP en el rango solicitado.
+
+    Úsala para preguntar cuánto cambió un indicador, su promedio, máximo o mínimo.
+    Recibe las mismas fechas que serie. Devuelve primero y último con sus periodos;
+    cambio = último - primero; variacion_pct = cambio / primero * 100; promedio
+    aritmético de los valores disponibles con el rango observado; máximo y mínimo
+    con su periodo (si hay empate, el primero). Incluye la cantidad de valores y
+    la URL de la fuente. Si el primer valor es cero, variacion_pct es null porque
+    no se puede dividir entre cero. En una serie expresada en %, cambio se mide
+    en puntos porcentuales; variacion_pct mide el cambio relativo de esa tasa.
+    Este resumen no calcula inflación acumulada ni anualiza tasas.
+    """
+    # 1. Reutilizamos serie: ella se encarga de consultar al banco y ordenar las fechas.
+    resultado = serie(codigo, desde, hasta)
+    datos = resultado["datos"]
+    primero, ultimo = datos[0], datos[-1]
+
+    # 2. Python hace las cuentas usando las cifras completas, sin redondearlas antes.
+    cambio = ultimo["valor"] - primero["valor"]
+    variacion = cambio / primero["valor"] * 100 if primero["valor"] != 0 else None
+    promedio = fmean(fila["valor"] for fila in datos)
+
+    # 3. Conservamos las fechas y la fuente para que cada resultado se pueda comprobar.
+    return {
+        "codigo": resultado["codigo"], "nombre": resultado["nombre"],
+        "frecuencia": resultado["frecuencia"], "cantidad": len(datos),
+        "primero": primero, "ultimo": ultimo,
+        "cambio": cambio, "variacion_pct": variacion,
+        "promedio": {"valor": promedio, "desde": primero["periodo"], "hasta": ultimo["periodo"]},
+        "maximo": max(datos, key=lambda fila: fila["valor"]),
+        "minimo": min(datos, key=lambda fila: fila["valor"]),
+        "fuente": resultado["fuente"],
+    }
+
 
 # TODO 3 · Una herramienta suya, bien descrita. Ideas:
 #   - comparar_paises con la API del Banco Mundial, que tampoco pide clave:

@@ -35,13 +35,42 @@ contiene los doce meses. Es inflación mensual, no inflación acumulada ni inter
 Si falta una cifra, no se convierte en cero: se omite. Si el código no existe, se informa del error.
 Las descargas se guardan en `datos/` para reutilizarlas; esa carpeta está excluida de Git.
 
+## Paso que completamos: resumir una serie
+
+`resumen` recibe el mismo código y las mismas fechas que `serie`. Primero llama a `serie`
+para obtener los valores; después Python calcula el resumen. No necesita otra consulta
+distinta al banco para hacer las cuentas.
+
+Ejemplo inventado para entender las operaciones: tres valores, **10, 15 y 20**.
+
+| Resultado | Cómo se obtiene | Valor del ejemplo |
+|---|---|---|
+| Primero y último | Tomamos el inicio y el final de la lista | 10 y 20 |
+| Cambio | Último menos primero | 10 |
+| Variación porcentual | Cambio dividido entre el primero, multiplicado por 100 | 100 % |
+| Promedio | Sumamos los valores y dividimos entre cuántos hay | 15 |
+| Máximo y mínimo | Buscamos el mayor y el menor | 20 y 10 |
+
+El resultado incluye las fechas de los extremos y el rango del promedio, la cantidad de
+valores disponibles y el enlace a la fuente. En caso de empate, se muestra la primera fecha.
+Si el valor inicial es cero, la variación porcentual se devuelve como `null` (sin valor),
+porque esa cuenta requeriría dividir entre cero.
+
+El cambio y la variación porcentual son cosas diferentes. Si una tasa pasa de 2 % a 3 %,
+sube **1 punto porcentual**; el aumento relativo de esa tasa es **50 %**. Esto no significa
+que la inflación acumulada del periodo sea 50 %. El promedio es la media simple de las
+observaciones disponibles, sin rellenar los datos ausentes con ceros.
+
 ## Qué comprobamos y qué falta
 
-Las ocho pruebas originales dan **4 aprobadas y 4 pendientes**.
-Ya pasan la búsqueda, la consulta mensual, la consulta diaria y el error por código inexistente.
+Las ocho pruebas originales dan **5 aprobadas y 3 pendientes**.
+Ya pasan la búsqueda, la consulta mensual, la consulta diaria, el resumen y el error por código inexistente.
 También comprobamos consultas anuales y trimestrales mediante un cliente MCP de Python.
+Las cuatro pruebas complementarias de `test_resumen_adicional.py` pasan: verifican las cuentas,
+el inicio en cero, una única observación y los extremos empatados. Las ocho pruebas originales
+del curso permanecen sin cambios.
 
-Faltan `resumen`, la herramienta propia, el recurso y el prompt. Después conectaremos el servidor al
+Faltan la herramienta propia, el recurso y el prompt. Después conectaremos el servidor al
 asistente y evaluaremos las diez preguntas. Las pruebas actuales llaman al MCP desde Python;
 la conexión para usarlo conversando todavía está pendiente.
 
