@@ -337,5 +337,40 @@ def ficha_serie(codigo: str) -> dict:
 # TODO 5 · Un prompt, por ejemplo informe(tema) que pida citar el código y el periodo de cada cifra.
 
 
+@mcp.prompt
+def informe(tema: str) -> str:
+    """Prepara instrucciones para un informe breve en español con datos y fuentes del BCRP.
+
+    Args:
+        tema: Indicador o comparación y periodo que interesa analizar; por ejemplo,
+            precios de exportación del cobre y del oro entre enero y agosto de 2026.
+    """
+    tema = tema.strip()
+    if not tema:
+        raise ValueError("Indica un tema para el informe del BCRP.")
+    return f"""Prepara un informe breve y fácil de entender sobre este tema:
+{json.dumps(tema, ensure_ascii=False)}
+
+Sigue estos pasos con el MCP bcrp:
+1. Usa buscar_series para identificar los códigos. Comprueba el nombre completo,
+   la unidad y la frecuencia: precio, producción y valor exportado son indicadores diferentes.
+2. Lee la ficha bcrp://serie/{{codigo}} si el cliente permite consultar recursos.
+   Si no los permite, utiliza la información del catálogo devuelta por buscar_series.
+3. Define el periodo de análisis. Si falta y no se pidió el último dato disponible,
+   pregunta qué periodo interesa. Si se pidió el último dato, indica su fecha real.
+4. Usa serie para obtener valores y resumen para promedios, máximos, mínimos y cambios.
+   Para comparar dos indicadores, usa comparar_series con la misma frecuencia e
+   informa el periodo común que devuelve. Deja que las herramientas hagan las cuentas.
+5. Presenta una tabla breve y explica los resultados en palabras simples. Para cada
+   cifra cita el código, el periodo, la unidad y la URL de la fuente devuelta por la
+   herramienta. Redondea solo para presentar. Distingue porcentajes de puntos
+   porcentuales y no confundas promedios de tasas con inflación acumulada.
+6. Si faltan datos o una herramienta devuelve un error, explica qué no se pudo
+   obtener. No rellenes datos ausentes con ceros ni inventes cifras de memoria.
+
+Incluye qué indicador se consultó, qué muestran los datos y los enlaces para comprobarlos.
+"""
+
+
 if __name__ == "__main__":
     mcp.run()

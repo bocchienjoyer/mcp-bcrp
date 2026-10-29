@@ -63,10 +63,11 @@ observaciones disponibles, sin rellenar los datos ausentes con ceros.
 
 ## Qué comprobamos y qué falta
 
-Las ocho pruebas originales dan **7 aprobadas y 1 pendiente**.
+Las ocho pruebas originales dan **8 aprobadas de 8**.
 Ya pasan la búsqueda, la consulta mensual, la consulta diaria, el resumen y el error por código inexistente.
 También pasa el requisito de cuatro herramientas: agregamos `comparar_series` como herramienta propia.
 Ya existe el recurso `bcrp://serie/{codigo}` y comprobamos la lectura de la ficha del oro.
+Ya existe el prompt `informe(tema)` y comprobamos que un cliente MCP pueda obtener sus instrucciones.
 También comprobamos consultas anuales y trimestrales mediante un cliente MCP de Python.
 Las cuatro pruebas complementarias de `test_resumen_adicional.py` pasan: verifican las cuentas,
 el inicio en cero, una única observación y los extremos empatados. Las ocho pruebas originales
@@ -76,7 +77,7 @@ Las ocho pruebas complementarias de `test_comparar_adicional.py` pasan. Comprueb
 porcentajes con las mismas fechas, que se conserven las fuentes y que se manejen datos insuficientes,
 frecuencias distintas, bases no positivas, empates y descensos.
 
-Falta el prompt. Después conectaremos el servidor al
+La construcción del servidor está completa. Después conectaremos el servidor al
 asistente y evaluaremos las diez preguntas. Las pruebas actuales llaman al MCP desde Python;
 la conexión para usarlo conversando todavía está pendiente.
 
@@ -127,6 +128,25 @@ La ficha del oro identifica el **precio de exportación**, en **US$ por onza tro
 frecuencia **mensual**. Esto permite comprobar qué representa el indicador antes de pedir valores.
 La fecha de actualización es la que figura en la copia del catálogo; no es la hora de la consulta.
 Si el código no existe, se devuelve un error claro en lugar de una ficha vacía.
+
+## El prompt: instrucciones guardadas para un informe
+
+`informe(tema)` es una plantilla de instrucciones. Cuando un cliente la solicita, el MCP
+le devuelve un mensaje adaptado al tema. Obtener el prompt entrega las instrucciones;
+el asistente todavía tiene que seguirlas y llamar a las herramientas para preparar el informe.
+
+Por ejemplo, el tema puede ser «precios de exportación del cobre y del oro entre enero y agosto de 2026».
+Las instrucciones piden al asistente que:
+
+1. Busque las series y compruebe qué mide cada una.
+2. Consulte sus fichas si el cliente permite leer recursos.
+3. Determine el periodo solicitado.
+4. Obtenga los valores y use las herramientas para hacer las cuentas.
+5. Prepare una tabla breve con una explicación sencilla.
+6. Cite código, periodo, unidad y enlace de cada cifra, e informe si faltan datos.
+
+Así podemos reutilizar el mismo procedimiento cambiando el tema. Los accesos a los prompts
+y recursos dependen del cliente; los comprobaremos al conectar el servidor a Codex.
 
 La [documentación oficial del BCRP](https://estadisticas.bcrp.gob.pe/estadisticas/series/ayuda/api)
 explica la dirección y los parámetros de las consultas.
