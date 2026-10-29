@@ -6,8 +6,12 @@
 
 Las cuentas las hace Python, no el modelo: así cada cifra sale de una llamada que se puede repetir.
 """
+import json
+import math
 import re
+import time
 import unicodedata
+from datetime import date
 from functools import cache
 from pathlib import Path
 
@@ -88,6 +92,129 @@ def buscar_series(texto: str, frecuencia: str | None = None, limite: int = 10) -
 #   - Si recibe muchos pedidos seguidos, la API responde una página HTML en vez de JSON: esperen unos segundos y
 #     reintenten (y guarden en caché lo que ya bajaron).
 #   - Un código que no existe debe dar un ToolError que diga el código.
+
+MESES = {nombre: numero for numero, nombre in enumerate(
+    ("ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "set", "oct", "nov", "dic"), 1)}
+MESES["sep"] = 9
+
+
+def _fecha_consulta(periodo, frecuencia):
+    """Devuelve la fecha uniforme para nosotros y la fecha que acepta el BCRP."""
+    if frecuencia == "Diaria":
+        normal = date.fromisoformat(periodo).isoformat()
+        return normal, normal
+    if frecuencia == "Mensual":
+        anio, mes = map(int, re.fullmatch(r"(\d{4})-(\d{1,2})", periodo).groups())
+        normal = date(anio, mes, 1).strftime("%Y-%m")
+        return normal, f"{anio}-{mes}"
+    if frecuencia == "Trimestral":
+        anio, trimestre = re.fullmatch(r"(\d{4})-T?([1-4])", periodo).groups()
+        return f"{anio}-T{trimestre}", f"{anio}-{trimestre}"
+    if frecuencia == "Anual" and re.fullmatch(r"\d{4}", periodo) and int(periodo) > 0:
+        return periodo, periodo
+    raise ValueError("frecuencia o periodo no reconocido")
+
+
+def _anio_bcrp(texto, desde, hasta):
+    """Cuando el banco abrevia el año, lo ubicamos dentro del rango solicitado."""
+    if len(texto) == 4:
+        return int(texto)
+    candidatos = [anio for anio in range(int(desde[:4]), int(hasta[:4]) + 1)
+                  if anio % 100 == int(texto)]
+    if len(candidatos) != 1:
+        raise ValueError(f"el año abreviado {texto!r} es ambiguo para ese rango")
+    return candidatos[0]
+
+
+def _periodo_bcrp(nombre, frecuencia, desde, hasta):
+    """Traduce, por ejemplo, Mar.2025 a 2025-03 y 01.Oct.26 a 2026-10-01."""
+    if frecuencia == "Anual":
+        return str(int(nombre))
+    if frecuencia == "Trimestral":
+        trimestre, anio = re.fullmatch(r"T([1-4])\.(\d{2}|\d{4})", nombre).groups()
+        return f"{_anio_bcrp(anio, desde, hasta)}-T{trimestre}"
+    partes = nombre.split(".")
+    anio = _anio_bcrp(partes[-1], desde, hasta)
+    mes = MESES[partes[-2].lower()]
+    dia = int(partes[0]) if frecuencia == "Diaria" else 1
+    normal = date(anio, mes, dia).isoformat()
+    return normal if frecuencia == "Diaria" else normal[:7]
+
+
+def _descargar_serie(codigo, desde_api, hasta_api):
+    """Reutiliza descargas y reintenta si el banco devuelve HTML o falla temporalmente."""
+    url = f"{API}/{codigo}/json/{desde_api}/{hasta_api}"
+    archivo = CATALOGO.parent / f"{codigo}_{desde_api}_{hasta_api}.json"
+    if archivo.exists():
+        try:
+            contenido = json.loads(archivo.read_text(encoding="utf-8"))
+            if isinstance(contenido.get("periods"), list):
+                return contenido, url
+        except (ValueError, AttributeError):
+            pass  # Una copia incompleta se vuelve a descargar.
+
+    for intento in range(3):
+        try:
+            respuesta = httpx.get(url, timeout=60, follow_redirects=True)
+            respuesta.raise_for_status()
+            contenido = respuesta.json()
+            if not isinstance(contenido, dict) or not isinstance(contenido.get("periods"), list):
+                raise ValueError("la respuesta no contiene una lista de periodos")
+        except (httpx.HTTPError, ValueError) as error:
+            if intento == 2:
+                raise ToolError(f"El BCRP no respondió con datos para {codigo}. Fuente: {url}") from error
+            time.sleep(intento + 1)
+        else:
+            archivo.parent.mkdir(exist_ok=True)
+            archivo.write_text(json.dumps(contenido, ensure_ascii=False), encoding="utf-8")
+            return contenido, url
+
+
+@mcp.tool(annotations=SOLO_LECTURA)
+def serie(codigo: str, desde: str, hasta: str) -> dict:
+    """Consulta valores oficiales de una serie del BCRP entre dos periodos, incluidos ambos.
+
+    Primero usa buscar_series para elegir el código y conocer su frecuencia y unidad.
+    Fechas: YYYY-MM-DD para Diaria, YYYY-MM para Mensual, YYYY-T1 a YYYY-T4 para
+    Trimestral y YYYY para Anual. Ejemplo: codigo="PN01271PM", desde="2025-01",
+    hasta="2025-12". Omite valores no disponibles y devuelve fechas, cifras y la URL
+    exacta de la fuente. Cita siempre el nombre, el periodo y la unidad de la serie.
+    """
+    # 1. Buscamos la ficha: identifica el indicador y si sus valores son diarios, mensuales, etc.
+    ficha = _ficha(codigo)
+    frecuencia = ficha["frecuencia"]
+    try:
+        inicio, desde_api = _fecha_consulta(desde, frecuencia)
+        fin, hasta_api = _fecha_consulta(hasta, frecuencia)
+    except (ValueError, AttributeError) as error:
+        raise ToolError(f"Fechas inválidas para {codigo} ({frecuencia}): {desde!r}, {hasta!r}.") from error
+    if inicio > fin:
+        raise ToolError(f"Para {codigo}, desde debe ser anterior o igual a hasta.")
+
+    # 2. Pedimos los datos al banco (o recuperamos una descarga idéntica).
+    contenido, url = _descargar_serie(codigo, desde_api, hasta_api)
+
+    # 3. Convertimos cada fila en una fecha uniforme y un número que Python pueda usar.
+    datos = []
+    for fila in contenido["periods"]:
+        try:
+            valor_original = fila["values"][0]
+            if valor_original is None or str(valor_original).strip().lower() in {"", "n.d.", "n.d"}:
+                continue
+            valor = float(valor_original)
+            if not math.isfinite(valor):
+                continue
+            periodo = _periodo_bcrp(fila["name"], frecuencia, inicio, fin)
+        except (ValueError, KeyError, IndexError, TypeError, AttributeError) as error:
+            raise ToolError(f"El BCRP devolvió una fila con formato inesperado para {codigo}. Fuente: {url}") from error
+        if inicio <= periodo <= fin:
+            datos.append({"periodo": periodo, "valor": valor})
+    if not datos:
+        raise ToolError(f"No hay valores disponibles para {codigo} entre {desde} y {hasta}. Fuente: {url}")
+
+    # 4. Entregamos los valores junto con la identificación y la fuente para poder verificarlos.
+    return {"codigo": codigo, "nombre": ficha["nombre"], "frecuencia": frecuencia,
+            "datos": sorted(datos, key=lambda fila: fila["periodo"]), "fuente": url}
 
 # TODO 2 · resumen(codigo, desde, hasta): primero, ultimo, cambio, variacion_pct, promedio, maximo y minimo
 #   (los tres últimos con su periodo). Úsenla para que el modelo nunca haga cuentas a mano.
