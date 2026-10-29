@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "bcrp": {
+      "command": "uv",
+      "args": ["run", "--frozen", "server.py"],
+      "env": {"PYTHONIOENCODING": "utf-8"}
+    },
+    "fetch": {
+      "command": "uvx",
+      "args": ["mcp-server-fetch==2026.10.28"],
+      "env": {"PYTHONIOENCODING": "utf-8"}
+    }
+  }
+}

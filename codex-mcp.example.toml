@@ -1,0 +1,15 @@
+# Ejemplo para Codex. Sustituye la ruta por la carpeta de tu copia del proyecto.
+# Requiere uv y uvx en PATH. No contiene claves ni datos de una cuenta.
+[mcp_servers.bcrp]
+command = "uv"
+args = ["--directory", "C:/ruta/a/mcp-bcrp", "run", "--frozen", "server.py"]
+
+[mcp_servers.bcrp.env]
+PYTHONIOENCODING = "utf-8"
+
+[mcp_servers.fetch]
+command = "uvx"
+args = ["mcp-server-fetch==2026.10.28"]
+
+[mcp_servers.fetch.env]
+PYTHONIOENCODING = "utf-8"

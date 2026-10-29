@@ -77,9 +77,11 @@ Las ocho pruebas complementarias de `test_comparar_adicional.py` pasan. Comprueb
 porcentajes con las mismas fechas, que se conserven las fuentes y que se manejen datos insuficientes,
 frecuencias distintas, bases no positivas, empates y descensos.
 
-La construcción del servidor está completa. Después conectaremos el servidor al
-asistente y evaluaremos las diez preguntas. Las pruebas actuales llaman al MCP desde Python;
-la conexión para usarlo conversando todavía está pendiente.
+La construcción del servidor está completa. Registramos `bcrp` y `fetch` en Codex y
+comprobamos su arranque como procesos independientes por stdio usando `verificar_conexion.py`.
+La comprobación recuperó herramientas, ficha, prompt y un precio del oro, y leyó una página con Fetch.
+Falta recargar las conexiones de la aplicación y comprobar una llamada directa del asistente
+desde el chat. Después evaluaremos las diez preguntas. Los pasos están en [CONEXION.md](CONEXION.md).
 
 ## Nuestra herramienta propia: comparar dos series
 
