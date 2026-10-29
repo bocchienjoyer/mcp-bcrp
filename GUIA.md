@@ -63,16 +63,52 @@ observaciones disponibles, sin rellenar los datos ausentes con ceros.
 
 ## Qué comprobamos y qué falta
 
-Las ocho pruebas originales dan **5 aprobadas y 3 pendientes**.
+Las ocho pruebas originales dan **6 aprobadas y 2 pendientes**.
 Ya pasan la búsqueda, la consulta mensual, la consulta diaria, el resumen y el error por código inexistente.
+También pasa el requisito de cuatro herramientas: agregamos `comparar_series` como herramienta propia.
 También comprobamos consultas anuales y trimestrales mediante un cliente MCP de Python.
 Las cuatro pruebas complementarias de `test_resumen_adicional.py` pasan: verifican las cuentas,
 el inicio en cero, una única observación y los extremos empatados. Las ocho pruebas originales
 del curso permanecen sin cambios.
 
-Faltan la herramienta propia, el recurso y el prompt. Después conectaremos el servidor al
+Las ocho pruebas complementarias de `test_comparar_adicional.py` pasan. Comprueban que se comparen
+porcentajes con las mismas fechas, que se conserven las fuentes y que se manejen datos insuficientes,
+frecuencias distintas, bases no positivas, empates y descensos.
+
+Faltan el recurso y el prompt. Después conectaremos el servidor al
 asistente y evaluaremos las diez preguntas. Las pruebas actuales llaman al MCP desde Python;
 la conexión para usarlo conversando todavía está pendiente.
+
+## Nuestra herramienta propia: comparar dos series
+
+`comparar_series` responde preguntas como «¿cuál de estos dos precios subió más en porcentaje?».
+Recibe dos códigos y las fechas de inicio y fin.
+
+1. Comprueba que las dos series tengan la misma frecuencia: por ejemplo, ambas mensuales.
+2. Llama a `serie` para obtener cada lista de datos.
+3. Encuentra las fechas que aparecen en ambas listas. Necesita al menos dos.
+4. Usa el primer y el último periodo compartidos para calcular las dos variaciones porcentuales.
+5. Devuelve los valores, las fechas realmente usadas, las variaciones y las dos fuentes.
+
+Esto permite comparar cambios aunque las unidades de los precios sean distintas. Ejemplo inventado:
+si un precio pasa de 100 a 200, sube 100 %; si otro pasa de 1,000 a 1,500, sube 50 %.
+El primero creció más en porcentaje. La comparación requiere valores iniciales positivos.
+Si ambas series bajan, el resultado identifica la caída menor; si empatan, lo indica.
+
+### Ejemplo real comprobado: enero a agosto de 2026
+
+Elegimos las series mensuales de **precios de exportación** del BCRP. El nombre completo del
+indicador es importante: el catálogo también contiene producción de cobre y oro y otras medidas.
+
+| Indicador | Código | Enero | Agosto | Cambio relativo |
+|---|---|---|---|---|
+| Cobre (centavos de US$ por libra) | PN38784BM | 660.48 | 689.70 | +4.42 % |
+| Oro (US$ por onza troy) | PN38793BM | 4,733.06 | 4,411.15 | -6.80 % |
+
+Las cuentas usan las cifras completas; la tabla las redondea para facilitar su lectura.
+La diferencia entre las variaciones es de 11.22 puntos porcentuales.
+Fuentes: [cobre](https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN38784BM/json/2026-1/2026-8)
+y [oro](https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN38793BM/json/2026-1/2026-8).
 
 La [documentación oficial del BCRP](https://estadisticas.bcrp.gob.pe/estadisticas/series/ayuda/api)
 explica la dirección y los parámetros de las consultas.

@@ -264,6 +264,61 @@ def resumen(codigo: str, desde: str, hasta: str) -> dict:
 #   - correlacion(codigo_a, codigo_b, desde, hasta)
 #   - grafico(codigo, desde, hasta) que guarde un PNG en salidas/ y devuelva la ruta
 
+
+@mcp.tool(annotations=SOLO_LECTURA)
+def comparar_series(codigo_a: str, codigo_b: str, desde: str, hasta: str) -> dict:
+    """Compara cuánto cambiaron dos indicadores del BCRP en las mismas fechas.
+
+    Úsala para preguntas como «¿qué precio subió más en porcentaje, cobre u oro?».
+    Primero busca los códigos y revisa sus nombres y unidades con buscar_series.
+    Las dos series deben tener la misma frecuencia. Recibe las fechas de serie.
+    Utiliza el primer y último periodo en que ambas tienen datos, y los informa;
+    necesita al menos dos periodos comunes y valores iniciales positivos.
+    Devuelve las cifras originales con sus unidades en el nombre, la variación
+    porcentual de cada indicador, la diferencia entre variaciones en puntos
+    porcentuales, el código con mayor variación y las dos fuentes.
+    Si ambas bajan, mayor variación identifica la caída menor; si empatan,
+    mayor_variacion es null y empate es true. No compara los precios absolutos
+    cuando sus unidades son distintas ni convierte monedas o frecuencias.
+    """
+    if codigo_a == codigo_b:
+        raise ToolError("Elige dos códigos distintos para comparar series.")
+    ficha_a, ficha_b = _ficha(codigo_a), _ficha(codigo_b)
+    if ficha_a["frecuencia"] != ficha_b["frecuencia"]:
+        raise ToolError(f"{codigo_a} y {codigo_b} tienen frecuencias distintas. Busca dos series de la misma frecuencia.")
+
+    # 1. Obtenemos ambas listas y conservamos solo las fechas presentes en las dos.
+    consulta_a = serie(codigo_a, desde, hasta)
+    consulta_b = serie(codigo_b, desde, hasta)
+    valores_a = {fila["periodo"]: fila["valor"] for fila in consulta_a["datos"]}
+    valores_b = {fila["periodo"]: fila["valor"] for fila in consulta_b["datos"]}
+    comunes = sorted(valores_a.keys() & valores_b.keys())
+    if len(comunes) < 2:
+        raise ToolError(f"{codigo_a} y {codigo_b} necesitan al menos dos periodos comunes para comparar cambios.")
+
+    # 2. Hacemos la misma cuenta para los dos indicadores, con idéntico inicio y final.
+    def calcular(consulta, valores):
+        inicio, fin = valores[comunes[0]], valores[comunes[-1]]
+        if inicio <= 0:
+            raise ToolError(f"La comparación porcentual requiere un valor inicial positivo para {consulta['codigo']}.")
+        cambio = fin - inicio
+        return {"codigo": consulta["codigo"], "nombre": consulta["nombre"],
+                "primero": {"periodo": comunes[0], "valor": inicio},
+                "ultimo": {"periodo": comunes[-1], "valor": fin},
+                "cambio": cambio, "variacion_pct": cambio / inicio * 100,
+                "fuente": consulta["fuente"]}
+
+    a, b = calcular(consulta_a, valores_a), calcular(consulta_b, valores_b)
+    empate = math.isclose(a["variacion_pct"], b["variacion_pct"], rel_tol=1e-12, abs_tol=1e-10)
+    mayor = None if empate else (codigo_a if a["variacion_pct"] > b["variacion_pct"] else codigo_b)
+    return {"frecuencia": ficha_a["frecuencia"],
+            "rango_solicitado": {"desde": desde, "hasta": hasta},
+            "periodo_comun": {"desde": comunes[0], "hasta": comunes[-1]},
+            "observaciones_comunes": len(comunes), "serie_a": a, "serie_b": b,
+            "diferencia_variaciones_pp": 0.0 if empate else a["variacion_pct"] - b["variacion_pct"],
+            "mayor_variacion": mayor, "empate": empate}
+
+
 # TODO 4 · Un recurso, por ejemplo la plantilla bcrp://serie/{codigo} con la ficha de la serie.
 
 # TODO 5 · Un prompt, por ejemplo informe(tema) que pida citar el código y el periodo de cada cifra.
