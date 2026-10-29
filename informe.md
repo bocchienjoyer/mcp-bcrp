@@ -25,7 +25,7 @@ Con el mismo modelo y las mismas diez preguntas, memoria acertó **1/10** y el M
 - Se exigió una consulta de cifras al MCP para considerar válida una respuesta numérica de ese brazo. Las comparaciones debían acertar el metal, el porcentaje y las dos fechas.
 - Los tiempos incluyen arranque del CLI y del MCP, solicitudes y generación de la respuesta. Las consultas pueden reutilizar la caché local; no son una medida de latencia de red en frío.
 - Corrida base: 20 llamadas. Experimento adicional: 10 llamadas de memoria. Diagnóstico aclarado: 1 llamada MCP. Las llamadas de preparación no forman parte de los resultados.
-- Resultados completos: [base](resultados.csv), [experimento](resultados_sin_abstencion.csv), [metadatos](ejecucion.json) y [evidencias por respuesta](evidencia_evaluacion/). Los registros brutos permanecen en salidas/, excluida de Git.
+- Resultados completos: [base](resultados.csv), [experimento](evaluacion/resultados_sin_abstencion.csv), [metadatos](evaluacion/ejecucion.json) y [evidencias por respuesta](evaluacion/evidencias/). Los registros brutos permanecen en salidas/, excluida de Git.
 
 ## Las dos preguntas propias
 
@@ -59,7 +59,7 @@ Se compara el valor final con el inicial: `(final / inicial - 1) × 100`. Es cre
 
 ## Verificación independiente en la web del BCRP
 
-Las referencias se comprobaron en tablas **HTML públicas del BCRP**, sin importar server.py ni llamar al MCP. Se conservaron los valores visibles, enlaces, fecha de consulta y SHA-256 de cada página en [fuentes.json](verificacion_web/fuentes.json), [referencias originales](referencias_verificadas.csv) y [precios de metales](metales_verificados.csv). El programa [verificar_referencias.py](verificar_referencias.py) permite repetir la comprobación. Las copias HTML quedan locales, fuera de Git.
+Las referencias se comprobaron en tablas **HTML públicas del BCRP**, sin importar server.py ni llamar al MCP. Se conservaron los valores visibles, enlaces, fecha de consulta y SHA-256 de cada página en [fuentes.json](verificacion/fuentes.json), [referencias originales](verificacion/referencias_verificadas.csv) y [precios de metales](verificacion/metales_verificados.csv). El programa [scripts/verificar_referencias.py](scripts/verificar_referencias.py) permite repetir la comprobación. Las copias HTML quedan locales, fuera de Git.
 
 Dos comprobaciones concretas de las nuevas preguntas:
 
@@ -91,7 +91,7 @@ La pregunta original dice «precio promedio del cobre», sin especificar exporta
 
 La [tabla alternativa LME](https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN01652XM/html/2026-8/2026-8) muestra 651 redondeado; la herramienta conserva mayor precisión. La [tabla de exportación](https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN38784BM/html/2026-8/2026-8) muestra 689.70. El fallo frente a la referencia no se debió a una cifra inventada, sino a la selección de un indicador distinto bajo una pregunta ambigua.
 
-Se hizo una única consulta diagnóstica cambiando la pregunta a «precio promedio de EXPORTACIÓN del cobre». Respondió **689.698759925968**, que sí coincide con la referencia. Está en [resultados_diagnostico.csv](resultados_diagnostico.csv) y tiene evidencia separada. No reemplaza la corrida base ni eleva su puntuación.
+Se hizo una única consulta diagnóstica cambiando la pregunta a «precio promedio de EXPORTACIÓN del cobre». Respondió **689.698759925968**, que sí coincide con la referencia. Está en [evaluacion/resultados_diagnostico.csv](evaluacion/resultados_diagnostico.csv) y tiene evidencia separada. No reemplaza la corrida base ni eleva su puntuación.
 
 ## Experimento adicional: quitar la instrucción de abstenerse
 
@@ -110,11 +110,11 @@ El acceso al MCP elevó los aciertos de 1/10 a 9/10 en esta muestra. Permitió r
 ```powershell
 uv sync --frozen
 uv run --frozen pytest -q
-uv run --frozen verificar_referencias.py
+uv run --frozen scripts/verificar_referencias.py
 uv run --frozen evaluar.py
 uv run --frozen evaluar.py --experimento sin_abstencion --modos memoria
-uv run --frozen auditar_resultados.py
-uv run --frozen generar_informe.py
+uv run --frozen scripts/auditar_resultados.py
+uv run --frozen scripts/generar_informe.py
 ```
 
-La configuración de Codex debe tener registrado bcrp; consulta [CONEXION.md](CONEXION.md). Para regenerar solo el informe y la figura con esta corrida basta el último comando; no consume nuevas llamadas al modelo.
+La configuración de Codex debe tener registrado bcrp; consulta [la guía de conexión](docs/CONEXION.md). Para regenerar solo el informe y la figura con esta corrida basta el último comando; no consume nuevas llamadas al modelo.

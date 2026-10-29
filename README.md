@@ -1,12 +1,10 @@
 # MCP del BCRP con OpenAI / Codex
 
-Servidor MCP para consultar series oficiales del Banco Central de Reserva del Perú y medir si su acceso mejora las respuestas de un modelo.
+Servidor MCP para consultar series oficiales del Banco Central de Reserva del Perú y evaluar si su acceso mejora las respuestas de un modelo.
 
-La **referencia principal** es la [presentación de clase](https://claude.ai/artifact/B9W8izJCRr6qsTLwbMXqcT).
-El [repositorio compartido](https://github.com/d2cml-ai/Data-Science-Python/tree/main/sessions/04-mcp-claude-code) aportó los archivos base.
-El enunciado se conserva en [ENUNCIADO_ORIGINAL.md](ENUNCIADO_ORIGINAL.md). Adaptamos la conexión y la evaluación de Claude Code a OpenAI mediante Codex.
+La referencia principal es la [presentación de clase](https://claude.ai/artifact/B9W8izJCRr6qsTLwbMXqcT). Partimos del [repositorio del curso](https://github.com/d2cml-ai/Data-Science-Python/tree/main/sessions/04-mcp-claude-code) y adaptamos la conexión y la evaluación de Claude Code a OpenAI mediante Codex. Conservamos el [enunciado original](docs/ENUNCIADO_ORIGINAL.md).
 
-## Resultado de la corrida guardada
+## Resultados
 
 | Condición | Aciertos | Discrepancias | No sabe |
 |---|---:|---:|---:|
@@ -14,29 +12,15 @@ El enunciado se conserva en [ENUNCIADO_ORIGINAL.md](ENUNCIADO_ORIGINAL.md). Adap
 | MCP del BCRP | 9/10 | 1 | 0 |
 | Memoria, sin esa instrucción | 2/10 | 0 | 8 |
 
-Mismo modelo `gpt-6.1-sol`, esfuerzo `low`, sesiones independientes y sin acceso a las respuestas de referencia.
-La discrepancia del cobre se debe a la selección de la serie LME frente al precio de exportación esperado por el curso; ambos indicadores son del BCRP.
-Una consulta aclarada con la palabra «exportación» acertó. Ese diagnóstico no reemplazó la corrida base.
+Usamos el mismo modelo `gpt-6.1-sol`, esfuerzo `low` y sesiones independientes. La discrepancia corresponde a una pregunta ambigua del cobre: el modelo eligió su cotización LME y la referencia esperaba el precio de exportación. Una consulta aclarada acertó; se conserva aparte, sin cambiar el 9/10.
 
-- [Informe completo](informe.md).
-- [Resultados base](resultados.csv), [experimento adicional](resultados_sin_abstencion.csv) y [diagnóstico](resultados_diagnostico.csv).
-- [Evidencias de las llamadas y respuestas](evidencia_evaluacion/).
-- [Referencias verificadas en la web](referencias_verificadas.csv) y [comparaciones de los metales](verificacion_web/comparaciones.json).
+- [Informe completo](informe.md), [diez preguntas](preguntas.csv) y [resultados base](resultados.csv).
+- [Experimento adicional](evaluacion/resultados_sin_abstencion.csv), [diagnóstico](evaluacion/resultados_diagnostico.csv) y [evidencias por respuesta](evaluacion/evidencias/).
+- [Referencias verificadas](verificacion/referencias_verificadas.csv) y [comparaciones de metales](verificacion/comparaciones.json), contrastadas con las tablas web del BCRP.
 
 ![Evaluación y comparaciones de metales](grafico.png)
 
-## Qué ofrece el MCP
-
-| Componente | Función |
-|---|---|
-| `buscar_series` | Busca códigos, nombres y frecuencias en el catálogo oficial. |
-| `serie` | Consulta valores diarios, mensuales, trimestrales o anuales y devuelve la fuente. |
-| `resumen` | Calcula cambios, promedio y extremos con sus periodos. |
-| `comparar_series` | Compara cambios porcentuales usando fechas comunes entre dos series. |
-| `bcrp://serie/{codigo}` | Recurso con la ficha de una serie. |
-| `informe(tema)` | Prompt reutilizable para preparar un informe con fuentes. |
-
-## Instalar y conectar
+## Instalar y usar
 
 Requisitos: Python 3.11 o superior, uv, Codex CLI con una sesión iniciada e internet.
 
@@ -47,44 +31,42 @@ uv sync --frozen
 uv run --frozen pytest -q
 ```
 
-Las ocho pruebas originales de `test_server.py` se conservan sin cambios y pasan.
-Hay 27 comprobaciones complementarias; el total actual es 35 aprobadas.
-Consulta [CONEXION.md](CONEXION.md) para registrar `bcrp` y `fetch`, recargar la conexión y comprobar `/mcp`.
-`.mcp.json` conserva la configuración compatible con el recorrido original de Claude; `codex-mcp.example.toml` muestra la equivalente para Codex.
+Las ocho pruebas originales permanecen sin cambios. Con las 27 complementarias, pasan **35 pruebas**.
 
-## Usarlo conversando
+Sigue la [guía de conexión](docs/CONEXION.md) para registrar `bcrp` y `fetch` en Codex. La configuración de Claude se conserva en `.mcp.json`; su equivalente para Codex está en [este ejemplo](docs/codex-mcp.example.toml). La [guía sencilla](docs/GUIA.md) explica cómo funciona cada pieza.
 
-Con el MCP activado, pregunta normalmente. Por ejemplo:
+Con el MCP activado, pregunta normalmente:
 
 - ¿Cuánto está la plata hoy?
 - ¿Qué subió más entre el cierre de 2025 y el 27 de octubre de 2026: cobre, plata u oro?
 - ¿Cuál de esos tres creció más entre el 27 de octubre de 2016 y el 27 de octubre de 2026?
 
-El asistente debe consultar las herramientas y responder con fecha, unidad, código y fuente.
-«Hoy» puede devolver el último dato publicado por el BCRP; debe indicarse la fecha real del dato.
-La [guía sencilla](GUIA.md) explica las piezas sin asumir conocimientos previos.
+La respuesta debe incluir fecha, unidad, código y fuente. «Hoy» corresponde al último dato publicado por el BCRP, cuya fecha debe indicarse.
 
-## Repetir la evaluación
+## Qué ofrece
+
+`buscar_series` identifica indicadores; `serie` obtiene sus datos; `resumen` calcula cambios, promedio y extremos. Nuestra herramienta propia, **`comparar_series`**, compara variaciones porcentuales entre dos series usando fechas comunes y devuelve ambas fuentes. Incluimos el recurso `bcrp://serie/{codigo}` y el prompt `informe(tema)`.
+
+## Organización
+
+En la raíz quedan el servidor, el evaluador y los archivos principales de la entrega.
+
+| Carpeta | Contenido |
+|---|---|
+| [docs/](docs/) | Conexión, guía sencilla, enunciado y figura vectorial. |
+| [scripts/](scripts/) | Verificar referencias y conexión, auditar resultados y generar el informe. |
+| [tests/](tests/) | Pruebas complementarias; `test_server.py` conserva las originales en la raíz. |
+| [evaluacion/](evaluacion/) | Metadatos, esquema de respuesta, experimentos y evidencias. |
+| [verificacion/](verificacion/) | Cifras y fuentes comprobadas independientemente en la web. |
+
+Los entornos, datos descargados, registros brutos y copias HTML quedan excluidos de Git.
+
+## Reproducir
+
+Para regenerar el informe y la figura desde los resultados incluidos, sin nuevas llamadas al modelo:
 
 ```powershell
-uv run --frozen verificar_referencias.py
-uv run --frozen evaluar.py
-uv run --frozen evaluar.py --experimento sin_abstencion --modos memoria
-uv run --frozen auditar_resultados.py
-uv run --frozen generar_informe.py
+uv run --frozen scripts/generar_informe.py
 ```
 
-Se ejecutan 20 llamadas base y 10 del experimento. Usa la sesión de ChatGPT de Codex; no requiere agregar una clave de OpenAI.
-Una nueva corrida consume uso del modelo y puede producir respuestas y tiempos distintos.
-Para regenerar la figura y el informe desde los resultados incluidos basta ejecutar `generar_informe.py`.
-
-El diagnóstico opcional, separado de la puntuación base, se repite con:
-
-```powershell
-uv run --frozen evaluar.py --preguntas preguntas_diagnostico.csv --ids cobre_ago26 --modos mcp
-```
-
-`verificar_referencias.py` lee tablas HTML del BCRP independientemente de nuestro servidor.
-Guarda los valores visibles, sus enlaces y huellas de las páginas en `verificacion_web/`.
-También se contrastaron dos tablas en el navegador: [registro](verificacion_web/comprobacion_visual.md).
-Las carpetas de datos descargados, entornos, registros brutos y copias HTML quedan excluidas de Git.
+El [informe](informe.md#reproducir) detalla cómo repetir la verificación y las evaluaciones. Una nueva evaluación consume uso del modelo y puede producir respuestas distintas.

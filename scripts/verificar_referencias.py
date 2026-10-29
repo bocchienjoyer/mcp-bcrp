@@ -1,6 +1,6 @@
 """Verifica cifras en tablas HTML del BCRP, sin importar ni usar nuestro MCP.
 
-    uv run --frozen verificar_referencias.py
+    uv run --frozen scripts/verificar_referencias.py
 
 Guarda valores visibles, enlaces y huellas de las páginas. Las copias HTML son locales.
 """
@@ -15,8 +15,8 @@ from pathlib import Path
 
 import httpx
 
-AQUI = Path(__file__).parent
-CARPETA = AQUI / "verificacion_web"
+AQUI = Path(__file__).resolve().parents[1]
+CARPETA = AQUI / "verificacion"
 METALES = {"PD04701XD": "cobre", "PD04702XD": "plata", "PD04704XD": "oro"}
 
 
@@ -53,7 +53,7 @@ def tabla(codigos, desde, hasta, nombre):
 
 
 def escribir_csv(nombre, filas):
-    with (AQUI / nombre).open("w", encoding="utf-8", newline="") as archivo:
+    with (CARPETA / nombre).open("w", encoding="utf-8", newline="") as archivo:
         escritor = csv.DictWriter(archivo, fieldnames=list(filas[0]))
         escritor.writeheader()
         escritor.writerows(filas)

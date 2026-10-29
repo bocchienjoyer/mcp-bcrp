@@ -9,7 +9,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 
-AQUI = Path(__file__).parent
+AQUI = Path(__file__).resolve().parents[1]
 
 
 def leer_csv(nombre):
@@ -30,7 +30,7 @@ def numero(valor, decimales=2):
 
 
 def main():
-    base, extra = leer_csv("resultados.csv"), leer_csv("resultados_sin_abstencion.csv")
+    base, extra = leer_csv("resultados.csv"), leer_csv("evaluacion/resultados_sin_abstencion.csv")
     preguntas = leer_csv("preguntas.csv")
     assert len(preguntas) == 10 and len(base) == 20 and len(extra) == 10
     assert not any(f["resultado"] in {"error tecnico", "respuesta invalida"} for f in base + extra)
@@ -38,7 +38,7 @@ def main():
               ("MCP · base", [f for f in base if f["modo"] == "mcp"]),
               ("Memoria · sin instrucción de abstenerse", extra)]
     estadisticas = [(nombre, resumen(filas)) for nombre, filas in grupos]
-    metales = json.loads((AQUI / "verificacion_web/comparaciones.json").read_text(encoding="utf-8"))
+    metales = json.loads((AQUI / "verificacion/comparaciones.json").read_text(encoding="utf-8"))
 
     plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10,
                          "axes.spines.top": False, "axes.spines.right": False,
@@ -81,8 +81,8 @@ def main():
     fig.supxlabel("OpenAI gpt-6.1-sol · esfuerzo low · una respuesta por pregunta y condición.\n"
                   "Paneles B–C: cálculos independientes con valores visibles en las tablas web del BCRP.", fontsize=9)
     fig.savefig(AQUI / "grafico.png", dpi=220, bbox_inches="tight")
-    fig.savefig(AQUI / "grafico.svg", bbox_inches="tight")
-    svg = AQUI / "grafico.svg"
+    fig.savefig(AQUI / "docs" / "grafico.svg", bbox_inches="tight")
+    svg = AQUI / "docs" / "grafico.svg"
     svg.write_text("\n".join(linea.rstrip() for linea in svg.read_text(encoding="utf-8").splitlines()) + "\n",
                    encoding="utf-8")
     plt.close(fig)
@@ -129,8 +129,8 @@ def main():
         "Las consultas pueden reutilizar la caché local; no son una medida de latencia de red en frío.",
         "- Corrida base: 20 llamadas. Experimento adicional: 10 llamadas de memoria. Diagnóstico aclarado: 1 llamada MCP. "
         "Las llamadas de preparación no forman parte de los resultados.",
-        "- Resultados completos: [base](resultados.csv), [experimento](resultados_sin_abstencion.csv), "
-        "[metadatos](ejecucion.json) y [evidencias por respuesta](evidencia_evaluacion/). "
+        "- Resultados completos: [base](resultados.csv), [experimento](evaluacion/resultados_sin_abstencion.csv), "
+        "[metadatos](evaluacion/ejecucion.json) y [evidencias por respuesta](evaluacion/evidencias/). "
         "Los registros brutos permanecen en salidas/, excluida de Git.", "",
         "## Las dos preguntas propias", ""]
     for q in preguntas[8:]:
@@ -145,12 +145,12 @@ def main():
     lineas += ["## Verificación independiente en la web del BCRP", "",
         "Las referencias se comprobaron en tablas **HTML públicas del BCRP**, sin importar server.py ni llamar "
         "al MCP. Se conservaron los valores visibles, enlaces, fecha de consulta y SHA-256 de cada página en "
-        "[fuentes.json](verificacion_web/fuentes.json), [referencias originales](referencias_verificadas.csv) "
-        "y [precios de metales](metales_verificados.csv). El programa [verificar_referencias.py](verificar_referencias.py) "
+        "[fuentes.json](verificacion/fuentes.json), [referencias originales](verificacion/referencias_verificadas.csv) "
+        "y [precios de metales](verificacion/metales_verificados.csv). El programa [scripts/verificar_referencias.py](scripts/verificar_referencias.py) "
         "permite repetir la comprobación. Las copias HTML quedan locales, fuera de Git.", "",
         "Dos comprobaciones concretas de las nuevas preguntas:", "",
         "| Serie | Fecha | Valor visible | Unidad | Tabla web |", "|---|---|---:|---|---|"]
-    precios = leer_csv("metales_verificados.csv")
+    precios = leer_csv("verificacion/metales_verificados.csv")
     for codigo, fecha, unidad in [("PD04701XD", "2026-10-27", "centavos de US$/libra"),
                                  ("PD04704XD", "2016-10-27", "US$/onza troy")]:
         f = next(x for x in precios if x["codigo"] == codigo and x["fecha"] == fecha)
@@ -179,7 +179,7 @@ def main():
         "un indicador distinto bajo una pregunta ambigua.", "",
         "Se hizo una única consulta diagnóstica cambiando la pregunta a «precio promedio de EXPORTACIÓN del cobre». "
         "Respondió **689.698759925968**, que sí coincide con la referencia. Está en "
-        "[resultados_diagnostico.csv](resultados_diagnostico.csv) y tiene evidencia separada. "
+        "[evaluacion/resultados_diagnostico.csv](evaluacion/resultados_diagnostico.csv) y tiene evidencia separada. "
         "No reemplaza la corrida base ni eleva su puntuación.", "",
         "## Experimento adicional: quitar la instrucción de abstenerse", "",
         f"Al retirar únicamente la frase que pide null si no sabe, memoria pasó de {m['aciertos']} a {e['aciertos']} "
@@ -200,10 +200,10 @@ def main():
         "Un MCP resulta útil cuando se necesita consultar reiteradamente la misma fuente estructurada y repetir "
         "cálculos; aquí no se evaluó un brazo de búsqueda web, por lo que no se afirma que supere a la web.", "",
         "## Reproducir", "", "```powershell", "uv sync --frozen", "uv run --frozen pytest -q",
-        "uv run --frozen verificar_referencias.py", "uv run --frozen evaluar.py",
+        "uv run --frozen scripts/verificar_referencias.py", "uv run --frozen evaluar.py",
         "uv run --frozen evaluar.py --experimento sin_abstencion --modos memoria",
-        "uv run --frozen auditar_resultados.py", "uv run --frozen generar_informe.py", "```", "",
-        "La configuración de Codex debe tener registrado bcrp; consulta [CONEXION.md](CONEXION.md). "
+        "uv run --frozen scripts/auditar_resultados.py", "uv run --frozen scripts/generar_informe.py", "```", "",
+        "La configuración de Codex debe tener registrado bcrp; consulta [la guía de conexión](docs/CONEXION.md). "
         "Para regenerar solo el informe y la figura con esta corrida basta el último comando; no consume nuevas llamadas al modelo.", ""]
     (AQUI / "informe.md").write_text("\n".join(lineas), encoding="utf-8")
     print(json.dumps({nombre: s for nombre, s in estadisticas}, ensure_ascii=True, indent=2))

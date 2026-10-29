@@ -35,7 +35,7 @@ def configuracion_bcrp():
     carpeta = Path(os.environ.get("CODEX_HOME", str(Path.home() / ".codex")))
     c = tomllib.loads((carpeta / "config.toml").read_text(encoding="utf-8"))
     if "bcrp" not in c.get("mcp_servers", {}):
-        raise SystemExit("Registra primero bcrp en Codex; consulta CONEXION.md.")
+        raise SystemExit("Registra primero bcrp en Codex; consulta docs/CONEXION.md.")
     return c["mcp_servers"]["bcrp"]
 
 
@@ -57,7 +57,7 @@ def comando(args, modo, servidor, carpeta, salida):
     if not cli:
         raise RuntimeError("No se encontró Codex CLI en PATH.")
     cmd = [cli, "exec", "--ignore-user-config", "--ephemeral", "--skip-git-repo-check", "--sandbox", "read-only",
-           "--json", "--model", args.modelo, "--output-schema", str(AQUI / "esquema_respuesta.json"),
+           "--json", "--model", args.modelo, "--output-schema", str(AQUI / "evaluacion" / "esquema_respuesta.json"),
            "-o", str(salida), "-C", str(carpeta)]
     opciones = {"features.shell_tool": False, "features.unified_exec": False, "features.apps": False,
         "features.plugins": False, "features.multi_agent": False, "features.multi_agent_v2": False,
@@ -143,7 +143,7 @@ def preguntar(q, modo, args, servidor):
         "modo": modo, "experimento": args.experimento, "respuesta": respuesta, "llamadas_mcp": llamadas,
         "descubrimientos_sin_datos": descubrimientos,
         "uso": uso, "segundos": segundos, "resultado": resultado, "problemas": problemas}
-    destino = AQUI / "evidencia_evaluacion" / lote
+    destino = AQUI / "evaluacion" / "evidencias" / lote
     destino.mkdir(parents=True, exist_ok=True)
     (destino / f"{nombre}.json").write_text(json.dumps(evidencia, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"{args.experimento} | {modo:7} | {q['id']:18} | {resultado:16} | {segundos:.1f} s", flush=True)
@@ -186,7 +186,9 @@ def main():
     sufijo = "" if args.experimento == "base" else "_sin_abstencion"
     if args.ids:
         sufijo += "_diagnostico"
-    with (AQUI / f"resultados{sufijo}.csv").open("w", encoding="utf-8", newline="") as archivo:
+    carpeta_resultado = AQUI if not sufijo else AQUI / "evaluacion"
+    carpeta_resultado.mkdir(exist_ok=True)
+    with (carpeta_resultado / f"resultados{sufijo}.csv").open("w", encoding="utf-8", newline="") as archivo:
         escritor = csv.DictWriter(archivo, fieldnames=list(resultados[0]))
         escritor.writeheader(); escritor.writerows(resultados)
     meta = {"fecha_utc": datetime.now(timezone.utc).isoformat(), "modelo": args.modelo, "esfuerzo": args.esfuerzo,
@@ -194,7 +196,7 @@ def main():
         "codex_version": subprocess.run([shutil.which("codex"), "--version"], capture_output=True,
             text=True, encoding="utf-8").stdout.strip(),
         "aislamiento": "Sesiones efímeras en carpetas vacías, sin historial, shell, apps, plugins ni web; solo bcrp en modo mcp."}
-    (AQUI / f"ejecucion{sufijo}.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+    (AQUI / "evaluacion" / f"ejecucion{sufijo}.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
     for modo in args.modos:
         filas = [r for r in resultados if r["modo"] == modo]
         print(modo, {estado: sum(r["resultado"] == estado for r in filas)

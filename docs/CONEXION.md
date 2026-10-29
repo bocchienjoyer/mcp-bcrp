@@ -20,7 +20,7 @@ codex mcp add fetch --env PYTHONIOENCODING=utf-8 -- uvx mcp-server-fetch==2026.1
 codex mcp list
 ```
 
-`codex-mcp.example.toml` muestra la configuración equivalente. No copies sobre la configuración
+[codex-mcp.example.toml](codex-mcp.example.toml) muestra la configuración equivalente. No copies sobre la configuración
 personal completa: conserva las otras conexiones y preferencias que ya tengas.
 En este equipo registramos rutas absolutas al Python del proyecto y al uv local, de modo que
 el arranque no dependa de haber agregado uv al PATH. Esas rutas personales no se publican.
@@ -31,7 +31,7 @@ carpeta del proyecto con uv y uvx disponibles. Codex utiliza su configuración T
 ## Comprobar la conexión
 
 ```powershell
-uv run --frozen verificar_conexion.py
+uv run --frozen scripts/verificar_conexion.py
 ```
 
 La comprobación inicia procesos nuevos por stdio usando la configuración de Codex:
@@ -62,4 +62,4 @@ pudo llamar directamente a las herramientas de ambos servidores:
 
 El dato consultado corresponde al **precio mensual de exportación del oro**.
 [Fuente devuelta por la herramienta](https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PN38793BM/json/2026-8/2026-8).
-Esta comprobación conversacional es distinta de ejecutar `verificar_conexion.py`, que usa un cliente de prueba.
+Esta comprobación conversacional es distinta de ejecutar `scripts/verificar_conexion.py`, que usa un cliente de prueba.

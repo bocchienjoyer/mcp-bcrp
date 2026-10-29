@@ -1,6 +1,6 @@
 """Comprueba el arranque por stdio de BCRP y Fetch registrados en Codex.
 
-    uv run --frozen verificar_conexion.py
+    uv run --frozen scripts/verificar_conexion.py
 
 No utiliza un modelo. Lanza los procesos configurados y guarda la comprobación
 en salidas/conexion_verificada.json, una carpeta excluida de Git.
@@ -28,7 +28,7 @@ async def main():
     config = tomllib.loads((carpeta_codex / "config.toml").read_text(encoding="utf-8"))
     servidores = config.get("mcp_servers", {})
     if not all(nombre in servidores for nombre in ("bcrp", "fetch")):
-        raise SystemExit("Primero registra bcrp y fetch en Codex. Consulta CONEXION.md.")
+        raise SystemExit("Primero registra bcrp y fetch en Codex. Consulta docs/CONEXION.md.")
 
     async with Client(transporte(servidores["bcrp"]), timeout=180) as cliente:
         herramientas = sorted(t.name for t in await cliente.list_tools())
@@ -53,7 +53,7 @@ async def main():
                  "bcrp": {"herramientas": herramientas, "recurso": "correcto", "prompt": "correcto",
                           "consulta": datos},
                  "fetch": {"url": url, "lectura": "correcta"}}
-    salida = Path(__file__).parent / "salidas" / "conexion_verificada.json"
+    salida = Path(__file__).resolve().parents[1] / "salidas" / "conexion_verificada.json"
     salida.parent.mkdir(exist_ok=True)
     salida.write_text(json.dumps(resultado, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(resultado, ensure_ascii=True, indent=2))

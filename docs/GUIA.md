@@ -61,7 +61,7 @@ sube **1 punto porcentual**; el aumento relativo de esa tasa es **50 %**. Esto n
 que la inflación acumulada del periodo sea 50 %. El promedio es la media simple de las
 observaciones disponibles, sin rellenar los datos ausentes con ceros.
 
-## Qué comprobamos y qué falta
+## Qué comprobamos
 
 Las ocho pruebas originales dan **8 aprobadas de 8**.
 Ya pasan la búsqueda, la consulta mensual, la consulta diaria, el resumen y el error por código inexistente.
@@ -69,22 +69,22 @@ También pasa el requisito de cuatro herramientas: agregamos `comparar_series` c
 Ya existe el recurso `bcrp://serie/{codigo}` y comprobamos la lectura de la ficha del oro.
 Ya existe el prompt `informe(tema)` y comprobamos que un cliente MCP pueda obtener sus instrucciones.
 También comprobamos consultas anuales y trimestrales mediante un cliente MCP de Python.
-Las cuatro pruebas complementarias de `test_resumen_adicional.py` pasan: verifican las cuentas,
+Las cuatro pruebas complementarias de `tests/test_resumen_adicional.py` pasan: verifican las cuentas,
 el inicio en cero, una única observación y los extremos empatados. Las ocho pruebas originales
 del curso permanecen sin cambios.
 
-Las ocho pruebas complementarias de `test_comparar_adicional.py` pasan. Comprueban que se comparen
+Las ocho pruebas complementarias de `tests/test_comparar_adicional.py` pasan. Comprueban que se comparen
 porcentajes con las mismas fechas, que se conserven las fuentes y que se manejen datos insuficientes,
 frecuencias distintas, bases no positivas, empates y descensos.
 
 La construcción del servidor está completa. Registramos `bcrp` y `fetch` en Codex y
-comprobamos su arranque como procesos independientes por stdio usando `verificar_conexion.py`.
+comprobamos su arranque como procesos independientes por stdio usando `scripts/verificar_conexion.py`.
 La comprobación recuperó herramientas, ficha, prompt y un precio del oro, y leyó una página con Fetch.
 Después de recargar las conexiones, `/mcp` mostró ambos servidores activados. Comprobamos
 llamadas directas desde el chat a `buscar_series`, `serie` y Fetch; también se descubrió
 la plantilla del recurso. La conexión conversacional está confirmada. Ya evaluamos
 las diez preguntas con OpenAI: memoria acertó 1/10 y MCP 9/10 frente a la referencia.
-El [informe](informe.md) explica los resultados y la ambigüedad de la pregunta del cobre.
+El [informe](../informe.md) explica los resultados y la ambigüedad de la pregunta del cobre.
 Los pasos de conexión están en [CONEXION.md](CONEXION.md).
 
 ## Nuestra herramienta propia: comparar dos series
@@ -152,7 +152,7 @@ Las instrucciones piden al asistente que:
 6. Cite código, periodo, unidad y enlace de cada cifra, e informe si faltan datos.
 
 Así podemos reutilizar el mismo procedimiento cambiando el tema. Los accesos a los prompts
-y recursos dependen del cliente; los comprobaremos al conectar el servidor a Codex.
+y recursos dependen del cliente; comprobamos ambos mediante un cliente MCP de Python.
 
 La [documentación oficial del BCRP](https://estadisticas.bcrp.gob.pe/estadisticas/series/ayuda/api)
 explica la dirección y los parámetros de las consultas.

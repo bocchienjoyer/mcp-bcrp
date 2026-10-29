@@ -3,4 +3,4 @@ datos/
 __pycache__/
 .pytest_cache/
 salidas/
-verificacion_web/*.html
+verificacion/*.html

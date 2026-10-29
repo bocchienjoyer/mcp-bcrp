@@ -6,21 +6,23 @@ Solo se excluyen del conteo de consultas las respuestas exactamente vacías de e
 import csv
 import hashlib
 import json
+import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from evaluar import AQUI, calificar, descubrimiento_vacio
 
 
 def main():
     with (AQUI / "preguntas.csv").open(encoding="utf-8", newline="") as f:
         preguntas = {q["id"]: q for q in csv.DictReader(f)}
-    for experimento, nombre in [("base", "resultados.csv"), ("sin_abstencion", "resultados_sin_abstencion.csv")]:
+    for experimento, nombre in [("base", "resultados.csv"), ("sin_abstencion", "evaluacion/resultados_sin_abstencion.csv")]:
         archivo = AQUI / nombre
         with archivo.open(encoding="utf-8", newline="") as f:
             filas = list(csv.DictReader(f))
         for fila in filas:
             caso = f"{fila['modo']}_{fila['id']}"
-            evidencia = AQUI / "evidencia_evaluacion" / experimento / f"{caso}.json"
+            evidencia = AQUI / "evaluacion" / "evidencias" / experimento / f"{caso}.json"
             r = json.loads(evidencia.read_text(encoding="utf-8"))
             raw = (AQUI / "salidas" / "evaluacion" / experimento / f"{caso}.jsonl").read_bytes()
             llamadas, vacios = [], []
